@@ -18,9 +18,6 @@ public:
 	olc::Sprite* GetSprite(const std::string& name);
 	olc::Decal* GetDecal(const std::string& name);
 
-	float GetSpriteWidth(const std::string& name);
-	float GetSpriteHeight(const std::string& name);
-
 	void LoadSprites();
 private:
 	Assets();

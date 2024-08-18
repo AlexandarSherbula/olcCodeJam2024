@@ -7,6 +7,11 @@ void Assets::LoadSprites()
 		mapSprites[name].Load(fileName);
 	};
 
+	load("idle1", "assets/sprites/player/idle/idle-1.png");
+	load("idle2", "assets/sprites/player/idle/idle-2.png");
+	load("idle3", "assets/sprites/player/idle/idle-3.png");
+	load("idle4", "assets/sprites/player/idle/idle-4.png");
+
 	load("walk1",  "assets/sprites/player/walk/walk-1.png");
 	load("walk2",  "assets/sprites/player/walk/walk-2.png");
 	load("walk3",  "assets/sprites/player/walk/walk-3.png");
@@ -24,10 +29,20 @@ void Assets::LoadSprites()
 	load("walk15", "assets/sprites/player/walk/walk-15.png");
 	load("walk16", "assets/sprites/player/walk/walk-16.png");
 
-	load("idle1", "assets/sprites/player/idle/idle-1.png");
-	load("idle2", "assets/sprites/player/idle/idle-2.png");
-	load("idle3", "assets/sprites/player/idle/idle-3.png");
-	load("idle4", "assets/sprites/player/idle/idle-4.png");
+	load("run1", "assets/sprites/player/run/run-1.png");
+	load("run2", "assets/sprites/player/run/run-2.png");
+	load("run3", "assets/sprites/player/run/run-3.png");
+	load("run4", "assets/sprites/player/run/run-4.png");
+	load("run5", "assets/sprites/player/run/run-5.png");
+	load("run6", "assets/sprites/player/run/run-6.png");
+	load("run7", "assets/sprites/player/run/run-7.png");
+	load("run8", "assets/sprites/player/run/run-8.png");
+	load("run9", "assets/sprites/player/run/run-9.png");
+
+	load("jump1", "assets/sprites/player/jump/jump-1.png");
+	load("jump2", "assets/sprites/player/jump/jump-2.png");
+	load("jump3", "assets/sprites/player/jump/jump-3.png");
+	load("jump4", "assets/sprites/player/jump/jump-4.png");
 }
 
 Assets::Assets()
@@ -46,14 +61,4 @@ olc::Sprite* Assets::GetSprite(const std::string& name)
 olc::Decal* Assets::GetDecal(const std::string& name)
 {
 	return mapSprites[name].Decal();
-}
-
-float Assets::GetSpriteWidth(const std::string& name)
-{
-	return mapSprites[name].Sprite()->width;
-}
-
-float Assets::GetSpriteHeight(const std::string& name)
-{
-	return mapSprites[name].Sprite()->height;
 }

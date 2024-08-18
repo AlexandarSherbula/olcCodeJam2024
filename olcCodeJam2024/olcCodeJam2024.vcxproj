@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClInclude Include="src\Assets.h" />
     <ClInclude Include="src\Game.h" />
+    <ClInclude Include="src\Map.h" />
     <ClInclude Include="src\Object.h" />
     <ClInclude Include="src\olcPixelGameEngine.h" />
     <ClInclude Include="src\Player.h" />
@@ -155,6 +156,7 @@
     <ClCompile Include="src\Assets.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Map.cpp" />
     <ClCompile Include="src\Object.cpp" />
     <ClCompile Include="src\olcPixelGameEngine.cpp" />
     <ClCompile Include="src\Player.cpp" />

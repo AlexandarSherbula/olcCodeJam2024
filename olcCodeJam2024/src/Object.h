@@ -8,6 +8,17 @@ enum class Direction
 	RIGHT = 1
 };
 
+class AnchorPoint
+{
+public:
+	olc::vi2d direction;
+	olc::vf2d position;
+	float distance;
+public:
+	AnchorPoint();
+	AnchorPoint(const olc::vi2d& direction);
+};
+
 class Object
 {
 public:
@@ -29,10 +40,10 @@ protected:
 	int8_t mCurrentImage;
 	std::string mAnimationName;
 
-	uint8_t mFrameCount;
-	uint8_t mMaxFrameCount;
+	float mFrameCount;
+	float mMaxFrameCount;
 public:
 	AnimatedObject();
 
-	virtual void HandleAnimation();
+	virtual void HandleAnimation(float fElapsedTime);
 };
