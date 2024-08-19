@@ -52,5 +52,5 @@ int32_t Map::GetTileID(olc::vi2d unitPos)
 
 void Map::Draw()
 {
-	game->DrawDecal({ 0.0f, 0.0f }, mGFX.Decal());
+	game->DrawDecal(-game->camera.offset, mGFX.Decal());
 }

@@ -4,7 +4,7 @@
 
 Player::Player()
 {
-	position = { 72.0f, 50.0f };
+	position = { 72.0f, 559.0f };
 	mAcceleration = 0.046875f;
 	mAirAcceleration = 0.093750f;
 	mDeceleration = 0.5f;
@@ -124,7 +124,15 @@ void Player::FindSurface(AnchorPoint& point)
 	{
 		if (mJumped)
 		{
-			SetAnimationState(AnimationState::IDLE);
+			if (mGroundSpeed != 0.0f)
+			{
+				if (std::abs(mGroundSpeed) >= 6.0f)
+					SetAnimationState(AnimationState::RUN);
+				else
+					SetAnimationState(AnimationState::WALK);
+			}
+			else
+				SetAnimationState(AnimationState::IDLE);
 			mJumped = false;
 		}
 
@@ -239,36 +247,36 @@ void Player::HandleAnimation(float fElapsedTime)
 	
 }
 
-void Player::Draw()
-{
-	olc::Decal* decal = Assets::get().GetDecal(mAnimationName + std::to_string(mCurrentImage));
-	olc::vf2d drawPosition = { position.x - (decal->sprite->width / 2.0f) * (float)direction, position.y - decal->sprite->height / 2.0f };
-
-	game->DrawDecal(drawPosition, decal, { (float)direction , 1.0f});
-
-	game->FillRectDecal(position, { 1, 1 }, olc::BLACK);
-	game->FillRectDecal({ (position.x - 1), position.y }, { 1, 1 });
-	game->FillRectDecal({ (position.x + 1), position.y }, { 1, 1 });
-	game->FillRectDecal({ position.x, position.y - 1 }, { 1, 1 });
-	game->FillRectDecal({ position.x, position.y + 1 }, { 1, 1 });
-
-	DrawHitbox();
-}
-
 void Player::UpdateSensors()
 {
 	mPointA.position = { position.x - 10.0f, position.y + 33.0f };
 	mPointB.position = { position.x + 10.0f, position.y + 33.0f };
 }
 
+void Player::Draw()
+{
+	olc::Decal* decal = Assets::get().GetDecal(mAnimationName + std::to_string(mCurrentImage));
+	olc::vf2d drawPosition = { position.x - (decal->sprite->width / 2.0f) * (float)direction, position.y - decal->sprite->height / 2.0f };
+
+	game->DrawDecal(drawPosition - game->camera.offset, decal, { (float)direction , 1.0f});
+
+	//game->FillRectDecal(position - game->camera.offset, { 1, 1 }, olc::BLACK);
+	//game->FillRectDecal(olc::vf2d((position.x - 1), position.y) - game->camera.offset, { 1, 1 });
+	//game->FillRectDecal(olc::vf2d((position.x + 1), position.y) - game->camera.offset, { 1, 1 });
+	//game->FillRectDecal(olc::vf2d( position.x, position.y - 1 ) - game->camera.offset, { 1, 1 });
+	//game->FillRectDecal(olc::vf2d( position.x, position.y + 1 ) - game->camera.offset, { 1, 1 });
+
+	//DrawHitbox();
+}
+
 void Player::DrawHitbox()
 {
 	if (speed.y >= 0.0f)
 	{
-		game->FillRectDecal({ mPointA.position.x, position.y }, { 1.0f, 33.0f }, olc::RED);
-		game->FillRectDecal({ mPointB.position.x, position.y }, { 1.0f, 33.0f }, olc::BLUE);
+		game->FillRectDecal(olc::vf2d(mPointA.position.x, position.y) - game->camera.offset, { 1.0f, 33.0f }, olc::RED);
+		game->FillRectDecal(olc::vf2d(mPointB.position.x, position.y) - game->camera.offset, { 1.0f, 33.0f }, olc::BLUE);
 
-		game->FillRectDecal(mPointA.position, { 1.0f, 1.0f });
-		game->FillRectDecal(mPointB.position, { 1.0f, 1.0f });
+		game->FillRectDecal(mPointA.position - game->camera.offset, { 1.0f, 1.0f });
+		game->FillRectDecal(mPointB.position - game->camera.offset, { 1.0f, 1.0f });
 	}	
 }

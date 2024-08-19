@@ -17,11 +17,20 @@ Game::~Game()
 
 bool Game::OnUserCreate()
 {
+	camera.Create();
+
 	Assets::get().LoadSprites();
 
 	map.Load("assets/sprites/map01.png", "assets/nlohmann/json/olcCodeJam2024_map.json");
 
 	return true;
+}
+
+void Game::OnFixedUpdate()
+{
+	player.Movement();
+
+	camera.Update();
 }
 
 bool Game::OnUserUpdate(float fElapsedTime)
@@ -42,10 +51,9 @@ bool Game::OnUserUpdate(float fElapsedTime)
 
 	player.Draw();
 
+	//camera.DrawBorders();
+
 	return !GetKey(olc::ESCAPE).bPressed;
 }
 
-void Game::OnFixedUpdate()
-{
-	player.Movement();
-}
+

@@ -27,7 +27,7 @@ enum class AnimationState
 
 class Player : public AnimatedObject
 {
-public:
+private:
 	AnchorPoint mPointA;
 	AnchorPoint mPointB;
 private:

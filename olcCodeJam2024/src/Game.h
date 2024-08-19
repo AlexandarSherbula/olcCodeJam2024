@@ -3,6 +3,7 @@
 #include "olcPixelGameEngine.h"
 #include "Player.h"
 #include "Map.h"
+#include "Camera.h"
 
 class Game : public olc::PixelGameEngine
 {
@@ -18,8 +19,10 @@ public:
 public:
 	Player player;
 	Map map;
-	float timer;
-	float fixedTimeSimulated;
+	Camera camera;
+
+	double timer;
+	double fixedTimeSimulated;
 };
 
 inline Game* game;
