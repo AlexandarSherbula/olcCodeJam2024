@@ -43,6 +43,14 @@ void Assets::LoadSprites()
 	load("jump2", "assets/sprites/player/jump/jump-2.png");
 	load("jump3", "assets/sprites/player/jump/jump-3.png");
 	load("jump4", "assets/sprites/player/jump/jump-4.png");
+
+
+
+	load("buildings-bg",       "assets/sprites/background/buildings-bg.png");
+	load("near-buildings-bg",  "assets/sprites/background/near-buildings-bg.png");
+	load("skyline-a",          "assets/sprites/background/skyline-a.png");
+	load("skyline-b",          "assets/sprites/background/skyline-b.png");
+
 }
 
 Assets::Assets()

@@ -1,5 +1,6 @@
 #include "Map.h"
 #include "Game.h"
+#include "Assets.h"
 
 nlohmann::json Parse(const std::string& jsonFile)
 {
@@ -52,5 +53,25 @@ int32_t Map::GetTileID(olc::vi2d unitPos)
 
 void Map::Draw()
 {
+	olc::vf2d scale = {2.0f, 2.0f};
+
+	game->DrawDecal(olc::vf2d(0.0f - game->camera.offset.x / 16.0f, -100.0f), Assets::get().GetDecal("skyline-a"), scale);
+
+	float spriteWidth = Assets::get().GetDecal("skyline-b")->sprite->width * scale.x;
+
+	game->DrawDecal(olc::vf2d(spriteWidth - game->camera.offset.x / 16.0f, -100.0f), Assets::get().GetDecal("skyline-b"), scale);
+	game->DrawDecal(olc::vf2d(spriteWidth * 2.0f - game->camera.offset.x / 16.0f, -100.0f), Assets::get().GetDecal("skyline-a"), scale);
+
+	spriteWidth = Assets::get().GetDecal("buildings-bg")->sprite->width * scale.x;
+
+	game->DrawDecal(olc::vf2d(0.0f - game->camera.offset.x / 8.0f, 120.0f), Assets::get().GetDecal("buildings-bg"), scale);
+	game->DrawDecal(olc::vf2d(spriteWidth - game->camera.offset.x / 8.0f, 120.0f), Assets::get().GetDecal("buildings-bg"), scale);
+	game->DrawDecal(olc::vf2d(spriteWidth * 2.0f - game->camera.offset.x / 8.0f, 120.0f), Assets::get().GetDecal("buildings-bg"), scale);
+
+	spriteWidth = Assets::get().GetDecal("near-buildings-bg")->sprite->width;
+
+	game->DrawDecal(olc::vf2d(0.0f - game->camera.offset.x / 4.0f, 180.0f - game->camera.offset.y / 24.0f), Assets::get().GetDecal("near-buildings-bg"));
+	game->DrawDecal(olc::vf2d(spriteWidth - game->camera.offset.x / 4.0f, 180.0f - game->camera.offset.y / 24.0f), Assets::get().GetDecal("near-buildings-bg"));
+
 	game->DrawDecal(-game->camera.offset, mGFX.Decal());
 }
