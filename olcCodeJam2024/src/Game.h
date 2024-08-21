@@ -5,6 +5,9 @@
 #include "Map.h"
 #include "Camera.h"
 
+
+#include "olcPGEX_MiniAudio.h"
+
 class Game : public olc::PixelGameEngine
 {
 public:
@@ -23,6 +26,9 @@ public:
 
 	double timer;
 	double fixedTimeSimulated;
+private:
+	olc::MiniAudio ma;
+	int song1;
 };
 
 inline Game* game;

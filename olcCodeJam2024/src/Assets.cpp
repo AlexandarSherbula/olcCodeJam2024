@@ -50,6 +50,8 @@ void Assets::LoadSprites()
 	load("near-buildings-bg",  "assets/sprites/background/near-buildings-bg.png");
 	load("skyline-a",          "assets/sprites/background/skyline-a.png");
 	load("skyline-b",          "assets/sprites/background/skyline-b.png");
+	load("skyline",            "assets/sprites/background/skyline.png");
+	load("skyline-city",       "assets/sprites/background/skyline-city.png");
 
 }
 

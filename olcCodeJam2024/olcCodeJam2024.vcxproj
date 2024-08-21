@@ -122,6 +122,8 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -149,7 +151,9 @@
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\Map.h" />
+    <ClInclude Include="src\miniaudio.h" />
     <ClInclude Include="src\Object.h" />
+    <ClInclude Include="src\olcPGEX_MiniAudio.h" />
     <ClInclude Include="src\olcPixelGameEngine.h" />
     <ClInclude Include="src\Player.h" />
   </ItemGroup>

@@ -166,7 +166,7 @@ void Player::HandleAnimation(float fElapsedTime)
 			mFirstImage = 1;
 			mLastImage = 4;
 	
-			mMaxFrameCount = 5 * fElapsedTime;
+			mMaxFrameCount = 5;
 
 			if (mFrameCount >= mMaxFrameCount)
 			{
@@ -174,10 +174,10 @@ void Player::HandleAnimation(float fElapsedTime)
 					mCurrentImage = mFirstImage;
 				else
 					mCurrentImage++;
-				mFrameCount = 0.0f;
+				mFrameCount = 0;
 			}
 			else
-				mFrameCount += fElapsedTime;
+				mFrameCount ++;
 
 			break;
 		}
@@ -187,7 +187,7 @@ void Player::HandleAnimation(float fElapsedTime)
 			mFirstImage = 1;
 			mLastImage = 16;
 	
-			mMaxFrameCount = std::floor(std::max(0.0f, 8.0f - std::abs(mGroundSpeed))) * fElapsedTime;
+			mMaxFrameCount = std::floor(std::max(0.0f, 8.0f - std::abs(mGroundSpeed)));
 
 			if (mFrameCount >= mMaxFrameCount)
 			{
@@ -195,10 +195,10 @@ void Player::HandleAnimation(float fElapsedTime)
 					mCurrentImage = mFirstImage;
 				else
 					mCurrentImage++;
-				mFrameCount = 0.0f;
+				mFrameCount = 0;
 			}
 			else
-				mFrameCount += fElapsedTime;
+				mFrameCount++;
 
 			break;
 		}
@@ -208,7 +208,7 @@ void Player::HandleAnimation(float fElapsedTime)
 			mFirstImage = 1;
 			mLastImage = 8;
 
-			mMaxFrameCount = 5 * fElapsedTime;
+			mMaxFrameCount = 5;
 
 			if (mFrameCount >= mMaxFrameCount)
 			{
@@ -216,10 +216,10 @@ void Player::HandleAnimation(float fElapsedTime)
 					mCurrentImage = mFirstImage;
 				else
 					mCurrentImage++;
-				mFrameCount = 0.0f;
+				mFrameCount = 0;
 			}
 			else
-				mFrameCount += fElapsedTime;
+				mFrameCount++;
 
 			break;
 		}
@@ -229,22 +229,20 @@ void Player::HandleAnimation(float fElapsedTime)
 			mFirstImage = 1;
 			mLastImage = 4;
 
-			mMaxFrameCount = 5 * fElapsedTime;
+			mMaxFrameCount = 5;
 
 			if (mFrameCount >= mMaxFrameCount)
 			{
 				if (mCurrentImage < mLastImage)
 					mCurrentImage++;
-				mFrameCount = 0.0f;
+				mFrameCount = 0;
 			}
 			else
-				mFrameCount += fElapsedTime;
+				mFrameCount++;
 
 			break;
 		}
 	}
-	
-	
 }
 
 void Player::UpdateSensors()

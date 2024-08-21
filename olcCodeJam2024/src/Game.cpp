@@ -1,8 +1,6 @@
 #include "Game.h"
 #include "Assets.h"
 
-uint32_t increment = 1;
-
 Game::Game()
 {
 	sAppName = "olcCodeJam2024";
@@ -17,11 +15,12 @@ Game::~Game()
 
 bool Game::OnUserCreate()
 {
+	Assets::get().LoadSprites();
+	song1 = ma.LoadSound("assets/sfx/The Toadz - Street Chase - Loop.mp3");
+
 	camera.Create();
 
-	Assets::get().LoadSprites();
-
-	map.Load("assets/sprites/map01.png", "assets/nlohmann/json/olcCodeJam2024_map.json");
+	map.Load("assets/sprites/map01.png", "assets/json/olcCodeJam2024_map.json");
 
 	return true;
 }
@@ -36,19 +35,19 @@ void Game::OnFixedUpdate()
 bool Game::OnUserUpdate(float fElapsedTime)
 {
 	timer += fElapsedTime;
-
+	
 	while (fixedTimeSimulated < timer)
 	{
 		OnFixedUpdate();
 		fixedTimeSimulated += 1.0f / 60.0f;
 	}
-
+	
 	player.HandleAnimation(fElapsedTime);
 
 	Clear(olc::VERY_DARK_BLUE);
 
 	map.Draw();
-
+	
 	player.Draw();
 
 	//camera.DrawBorders();

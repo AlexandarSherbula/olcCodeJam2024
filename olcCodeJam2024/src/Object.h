@@ -40,8 +40,8 @@ protected:
 	int8_t mCurrentImage;
 	std::string mAnimationName;
 
-	float mFrameCount;
-	float mMaxFrameCount;
+	int8_t mFrameCount;
+	int8_t mMaxFrameCount;
 public:
 	AnimatedObject();
 

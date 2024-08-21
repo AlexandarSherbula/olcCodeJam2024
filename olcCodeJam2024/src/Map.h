@@ -2,7 +2,9 @@
 
 #include "olcPixelGameEngine.h"
 
-#include "../assets/nlohmann/json/json.hpp"
+#include "../../dependencies/nlohmann/json/json.hpp"
+
+#include <array>
 
 class Map
 {
@@ -12,6 +14,8 @@ public:
 	void Draw();
 
 	int32_t GetTileID(olc::vi2d unitPos);
+private:
+	void WrapBackgroundImage(float& spritePosX, float spriteWidth, float scrollSpeed, int lastImageIterator = 0);
 public:
 	olc::vi2d size;
 private:
@@ -21,4 +25,6 @@ private:
 
 	int32_t mUnitWidth;
 	int32_t mUnitHeight;
+
+	std::array<float, 11> spriteWidths;
 };
