@@ -8,6 +8,10 @@ Object::Object(const olc::vf2d& position)
 {
 }
 
+void Object::Update()
+{
+}
+
 void Object::Draw()
 {
 }
@@ -24,7 +28,7 @@ AnimatedObject::AnimatedObject() : Object()
 	direction = Direction::RIGHT;
 }
 
-void AnimatedObject::HandleAnimation(float fElapsedTime)
+void AnimatedObject::HandleAnimation()
 {
 }
 

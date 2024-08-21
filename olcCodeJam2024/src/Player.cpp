@@ -10,15 +10,47 @@ Player::Player()
 	mDeceleration = 0.5f;
 	mGravityForce = 0.21875f;
 	mJumpForce = 6.5f;
+
+	SetAnimationState(AnimationState::IDLE);
 }
 
 Player::~Player()
 {
 }
 
+void Player::Update()
+{
+	Shoot();
+
+	Movement();
+
+	HandleAnimation();
+}
+
+void Player::Shoot()
+{
+	if (game->GetMouse(0).bHeld)
+	{
+		if (mAnimState == AnimationState::JUMP || mAnimState == AnimationState::JUMP_SHOOT)
+			SetAnimationState(AnimationState::JUMP_SHOOT);
+		else
+		{
+			if (std::abs(mGroundSpeed) >= 6.0f || mAnimState == AnimationState::RUN_SHOOT)
+				SetAnimationState(AnimationState::RUN_SHOOT);
+			else if (std::abs(mGroundSpeed) < 6.0f)
+				SetAnimationState(AnimationState::SHOOT);
+		}
+
+		game->shotPos.x = position.x + 15.0f * (int32_t)direction;
+		game->shotPos.y = position.y - 13.0f;
+
+		game->bullet = Bullet(olc::vf2d(position.x + 15.0f * (int32_t)direction, position.y - 13.0f));
+	}
+}
+
 void Player::Movement()
 {
-	if (game->GetKey(olc::SPACE).bReleased)
+	if (!game->GetKey(olc::SPACE).bHeld)
 	{
 		mJumpLock = false;
 	}
@@ -62,12 +94,12 @@ void Player::Movement()
 				if (mGroundSpeed <= -6.0f)
 				{
 					mGroundSpeed = -6.0f;
-					if (!mJumped)
+					if (!mJumped && mAnimState != AnimationState::RUN_SHOOT)
 						SetAnimationState(AnimationState::RUN);
 				}
 				else
 				{
-					if (!mJumped)
+					if (!mJumped && mAnimState != AnimationState::SHOOT)
 						SetAnimationState(AnimationState::WALK);
 				}
 			}
@@ -89,12 +121,12 @@ void Player::Movement()
 				if (mGroundSpeed >= 6.0f)
 				{
 					mGroundSpeed = 6.0f;
-					if (!mJumped)
+					if (!mJumped && mAnimState != AnimationState::RUN_SHOOT)
 						SetAnimationState(AnimationState::RUN);
 				}
 				else
 				{
-					if (!mJumped)
+					if (!mJumped && mAnimState != AnimationState::SHOOT)
 						SetAnimationState(AnimationState::WALK);
 				}
 			}
@@ -150,12 +182,13 @@ void Player::SetAnimationState(AnimationState state)
 	{
 		mAnimState = state;
 		mCurrentImage = 1;
+		mFrameCount = 0;
 	}	
 }
 
-void Player::HandleAnimation(float fElapsedTime)
+void Player::HandleAnimation()
 {
-	if (mGroundSpeed == 0.0f)
+	if (mGroundSpeed == 0.0f && mAnimState != AnimationState::SHOOT)
 		SetAnimationState(AnimationState::IDLE);
 
 	switch (mAnimState)
@@ -242,6 +275,60 @@ void Player::HandleAnimation(float fElapsedTime)
 
 			break;
 		}
+		case AnimationState::SHOOT:
+		{
+			mAnimationName = "shoot";
+
+			mMaxFrameCount = 15;
+
+			if (mFrameCount >= mMaxFrameCount)
+			{
+				mAnimationName = "idle";
+				SetAnimationState(AnimationState::IDLE);
+			}
+			else
+				mFrameCount++;
+
+			break;
+		}
+		case AnimationState::RUN_SHOOT:
+		{
+			mAnimationName = "run-shoot";
+
+			mFirstImage = 1;
+			mLastImage = 3;
+
+			mMaxFrameCount = 5;
+
+			if (mFrameCount >= mMaxFrameCount)
+			{
+				if (mCurrentImage < mLastImage)
+					mCurrentImage++;
+				else
+				{
+					mAnimationName = "run";
+					SetAnimationState(AnimationState::RUN);
+				}
+				mFrameCount = 0;
+			}
+			else
+				mFrameCount++;
+
+			break;
+		}
+		case AnimationState::JUMP_SHOOT:
+		{
+			mAnimationName = "jump-shoot";
+
+			mMaxFrameCount = 15;
+
+			if (mFrameCount >= mMaxFrameCount)
+			{
+				mFrameCount = 0;
+			}
+
+			break;
+		}
 	}
 }
 
@@ -253,7 +340,14 @@ void Player::UpdateSensors()
 
 void Player::Draw()
 {
-	olc::Decal* decal = Assets::get().GetDecal(mAnimationName + std::to_string(mCurrentImage));
+	olc::Decal* decal;
+	if (mAnimState == AnimationState::SHOOT)
+		decal = Assets::get().GetDecal(mAnimationName);
+	else if (mAnimState == AnimationState::JUMP_SHOOT)
+		decal = Assets::get().GetDecal("jump4");
+	else
+		decal = Assets::get().GetDecal(mAnimationName + std::to_string(mCurrentImage));
+
 	olc::vf2d drawPosition = { position.x - (decal->sprite->width / 2.0f) * (float)direction, position.y - decal->sprite->height / 2.0f };
 
 	game->DrawDecal(drawPosition - game->camera.offset, decal, { (float)direction , 1.0f});

@@ -29,6 +29,8 @@ public:
 	Object();
 	Object(const olc::vf2d& position);
 
+	virtual void Update();
+
 	virtual void Draw();
 };
 
@@ -45,5 +47,5 @@ protected:
 public:
 	AnimatedObject();
 
-	virtual void HandleAnimation(float fElapsedTime);
+	virtual void HandleAnimation();
 };

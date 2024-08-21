@@ -6,6 +6,7 @@ Game::Game()
 	sAppName = "olcCodeJam2024";
 	timer = 0.0f;
 	fixedTimeSimulated = 0.0f;
+	shotSpeed = 0.0f;
 }
 
 Game::~Game()
@@ -27,7 +28,9 @@ bool Game::OnUserCreate()
 
 void Game::OnFixedUpdate()
 {
-	player.Movement();
+	player.Update();
+
+	bullet.Update();
 
 	camera.Update();
 }
@@ -35,20 +38,20 @@ void Game::OnFixedUpdate()
 bool Game::OnUserUpdate(float fElapsedTime)
 {
 	timer += fElapsedTime;
-	
+
 	while (fixedTimeSimulated < timer)
 	{
 		OnFixedUpdate();
 		fixedTimeSimulated += 1.0f / 60.0f;
 	}
-	
-	player.HandleAnimation(fElapsedTime);
 
 	Clear(olc::VERY_DARK_BLUE);
 
 	map.Draw();
 	
 	player.Draw();
+
+	bullet.Draw();
 
 	//camera.DrawBorders();
 

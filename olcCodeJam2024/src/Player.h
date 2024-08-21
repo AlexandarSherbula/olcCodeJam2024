@@ -19,6 +19,7 @@ enum class AnimationState
 	RUN,
 	RUN_SHOOT,
 	JUMP,
+	JUMP_SHOOT,
 	BACK_JUMP,
 	HURT,
 	CROUCH,
@@ -46,10 +47,13 @@ public:
 	Player();
 	~Player();
 
+
+	void Update() override;
+	void Shoot();
 	void Movement();
 
 	void SetAnimationState(AnimationState state);
-	void HandleAnimation(float fElapsedTime) override;
+	void HandleAnimation() override;
 	void Draw() override;
 private:
 	void UpdateSensors();

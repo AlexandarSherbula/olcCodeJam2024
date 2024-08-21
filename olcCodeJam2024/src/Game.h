@@ -1,10 +1,11 @@
 #pragma once
 
 #include "olcPixelGameEngine.h"
-#include "Player.h"
 #include "Map.h"
 #include "Camera.h"
 
+#include "Player.h"
+#include "Bullet.h"
 
 #include "olcPGEX_MiniAudio.h"
 
@@ -26,9 +27,12 @@ public:
 
 	double timer;
 	double fixedTimeSimulated;
-private:
+	olc::vf2d shotPos;
+	float shotSpeed;
+	Bullet bullet;
+
 	olc::MiniAudio ma;
-	int song1;
+	int32_t song1;
 };
 
 inline Game* game;

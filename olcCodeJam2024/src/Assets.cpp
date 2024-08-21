@@ -44,15 +44,30 @@ void Assets::LoadSprites()
 	load("jump3", "assets/sprites/player/jump/jump-3.png");
 	load("jump4", "assets/sprites/player/jump/jump-4.png");
 
+	load("shoot",              "assets/sprites/player/shoot/shoot.png");
+
+	load("run-shoot1",          "assets/sprites/player/run-shoot/run-shoot-1.png");
+	load("run-shoot2",          "assets/sprites/player/run-shoot/run-shoot-2.png");
+	load("run-shoot3",          "assets/sprites/player/run-shoot/run-shoot-3.png");
+	load("run-shoot4",          "assets/sprites/player/run-shoot/run-shoot-4.png");
+	load("run-shoot5",          "assets/sprites/player/run-shoot/run-shoot-5.png");
+	load("run-shoot6",          "assets/sprites/player/run-shoot/run-shoot-6.png");
+	load("run-shoot7",          "assets/sprites/player/run-shoot/run-shoot-7.png");
+	load("run-shoot8",          "assets/sprites/player/run-shoot/run-shoot-8.png");
 
 
-	load("buildings-bg",       "assets/sprites/background/buildings-bg.png");
-	load("near-buildings-bg",  "assets/sprites/background/near-buildings-bg.png");
-	load("skyline-a",          "assets/sprites/background/skyline-a.png");
-	load("skyline-b",          "assets/sprites/background/skyline-b.png");
-	load("skyline",            "assets/sprites/background/skyline.png");
-	load("skyline-city",       "assets/sprites/background/skyline-city.png");
 
+
+	load("shot1", "assets/sprites/misc/shot/shot-1.png");
+	load("shot2", "assets/sprites/misc/shot/shot-2.png");
+	load("shot3", "assets/sprites/misc/shot/shot-3.png");
+
+	load("buildings-bg", "assets/sprites/background/buildings-bg.png");
+	load("near-buildings-bg", "assets/sprites/background/near-buildings-bg.png");
+	load("skyline-a", "assets/sprites/background/skyline-a.png");
+	load("skyline-b", "assets/sprites/background/skyline-b.png");
+	load("skyline", "assets/sprites/background/skyline.png");
+	load("skyline-city", "assets/sprites/background/skyline-city.png");
 }
 
 Assets::Assets()
