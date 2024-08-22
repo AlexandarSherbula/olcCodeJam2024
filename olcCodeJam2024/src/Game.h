@@ -29,7 +29,6 @@ public:
 	double fixedTimeSimulated;
 	olc::vf2d shotPos;
 	float shotSpeed;
-	Bullet bullet;
 
 	olc::MiniAudio ma;
 	int32_t song1;

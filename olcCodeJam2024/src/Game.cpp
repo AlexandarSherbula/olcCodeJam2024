@@ -30,8 +30,6 @@ void Game::OnFixedUpdate()
 {
 	player.Update();
 
-	bullet.Update();
-
 	camera.Update();
 }
 
@@ -50,10 +48,6 @@ bool Game::OnUserUpdate(float fElapsedTime)
 	map.Draw();
 	
 	player.Draw();
-
-	bullet.Draw();
-
-	//camera.DrawBorders();
 
 	return !GetKey(olc::ESCAPE).bPressed;
 }

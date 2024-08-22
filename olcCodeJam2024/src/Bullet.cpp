@@ -14,6 +14,8 @@ Bullet::Bullet(const olc::vf2d& position, const olc::Pixel& colorTint)
 	mFirstImage = 1;
 	mLastImage = 3;
 	mMaxFrameCount = 5;
+
+	remove = false;
 }
 
 void Bullet::Update()

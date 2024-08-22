@@ -4,6 +4,7 @@
 
 #include "Object.h"
 #include "Map.h"
+#include "Bullet.h"
 
 enum class State
 {
@@ -31,22 +32,25 @@ class Player : public AnimatedObject
 private:
 	AnchorPoint mPointA;
 	AnchorPoint mPointB;
-private:
+
 	float mAcceleration;
 	float mAirAcceleration;
 	float mDeceleration;
 	float mGroundSpeed;
 	float mGravityForce;
-	float mJumpForce;
 
 	bool mJumped;
-	bool mJumpLock;
+	bool mCanJump;
+	float mJumpForce;
 
 	AnimationState mAnimState;
+
+	bool mCanShoot;
+	int32_t mBulletFrameCount;
+	std::list<Bullet> listBullets;
 public:
 	Player();
 	~Player();
-
 
 	void Update() override;
 	void Shoot();

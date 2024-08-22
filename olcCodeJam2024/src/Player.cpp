@@ -10,6 +10,9 @@ Player::Player()
 	mDeceleration = 0.5f;
 	mGravityForce = 0.21875f;
 	mJumpForce = 6.5f;
+	
+	mCanShoot = true;
+	mBulletFrameCount = 0;
 
 	SetAnimationState(AnimationState::IDLE);
 }
@@ -25,42 +28,75 @@ void Player::Update()
 	Movement();
 
 	HandleAnimation();
+
+	for (Bullet& b : listBullets)
+	{
+		b.Update();
+
+		b.HandleAnimation();
+	}
+
+	listBullets.remove_if([&](const Bullet& b) {return b.position.x > game->ScreenWidth() + game->camera.offset.x || b.position.x < game->camera.offset.x || b.remove; });
 }
 
 void Player::Shoot()
 {
-	if (game->GetMouse(0).bHeld)
+	if (game->GetMouse(0).bHeld && mCanShoot)
 	{
-		if (mAnimState == AnimationState::JUMP || mAnimState == AnimationState::JUMP_SHOOT)
+		if (mAnimState == AnimationState::JUMP && mAnimState != AnimationState::JUMP_SHOOT)
 			SetAnimationState(AnimationState::JUMP_SHOOT);
 		else
 		{
-			if (std::abs(mGroundSpeed) >= 6.0f || mAnimState == AnimationState::RUN_SHOOT)
+			if (std::abs(mGroundSpeed) >= 6.0f && mAnimState != AnimationState::RUN_SHOOT)
 				SetAnimationState(AnimationState::RUN_SHOOT);
-			else if (std::abs(mGroundSpeed) < 6.0f)
+			else if (std::abs(mGroundSpeed) < 6.0f && mAnimState != AnimationState::SHOOT)
 				SetAnimationState(AnimationState::SHOOT);
 		}
 
 		game->shotPos.x = position.x + 15.0f * (int32_t)direction;
 		game->shotPos.y = position.y - 13.0f;
 
-		game->bullet = Bullet(olc::vf2d(position.x + 15.0f * (int32_t)direction, position.y - 13.0f));
+		listBullets.push_back(Bullet(olc::vf2d(position.x + 15.0f * (int32_t)direction, position.y - 13.0f)));
+
+		mBulletFrameCount = 15;
+		mCanShoot = false;
 	}
+	else if (!mCanShoot)
+	{
+		mBulletFrameCount--;
+
+		if (mBulletFrameCount <= 0)
+			mCanShoot = true;
+	}
+
+	if (!game->GetMouse(0).bHeld && (mAnimState == AnimationState::SHOOT || mAnimState == AnimationState::JUMP_SHOOT || mAnimState == AnimationState::RUN_SHOOT))
+	{
+		if (std::abs(mGroundSpeed) >= 6.0f)
+			SetAnimationState(AnimationState::RUN);
+		else
+		{
+			if (mGroundSpeed != 0.0f)
+				SetAnimationState(AnimationState::WALK);
+			else
+				SetAnimationState(AnimationState::IDLE);
+		}
+	}
+
 }
 
 void Player::Movement()
 {
 	if (!game->GetKey(olc::SPACE).bHeld)
 	{
-		mJumpLock = false;
+		mCanJump = true;
 	}
 
-	if (game->GetKey(olc::SPACE).bHeld && !mJumped && !mJumpLock)
+	if (game->GetKey(olc::SPACE).bHeld && !mJumped && mCanJump)
 	{
 		speed.y -= mJumpForce;
 
 		mJumped = true;
-		mJumpLock = true;
+		mCanJump = false;
 
 		SetAnimationState(AnimationState::JUMP);
 	}
@@ -188,7 +224,7 @@ void Player::SetAnimationState(AnimationState state)
 
 void Player::HandleAnimation()
 {
-	if (mGroundSpeed == 0.0f && mAnimState != AnimationState::SHOOT)
+	if (mGroundSpeed == 0.0f && mAnimState != AnimationState::SHOOT && mAnimState != AnimationState::JUMP)
 		SetAnimationState(AnimationState::IDLE);
 
 	switch (mAnimState)
@@ -279,16 +315,6 @@ void Player::HandleAnimation()
 		{
 			mAnimationName = "shoot";
 
-			mMaxFrameCount = 15;
-
-			if (mFrameCount >= mMaxFrameCount)
-			{
-				mAnimationName = "idle";
-				SetAnimationState(AnimationState::IDLE);
-			}
-			else
-				mFrameCount++;
-
 			break;
 		}
 		case AnimationState::RUN_SHOOT:
@@ -296,19 +322,16 @@ void Player::HandleAnimation()
 			mAnimationName = "run-shoot";
 
 			mFirstImage = 1;
-			mLastImage = 3;
+			mLastImage = 8;
 
 			mMaxFrameCount = 5;
 
 			if (mFrameCount >= mMaxFrameCount)
 			{
-				if (mCurrentImage < mLastImage)
-					mCurrentImage++;
+				if (mCurrentImage >= mLastImage)
+					mCurrentImage = mFirstImage;
 				else
-				{
-					mAnimationName = "run";
-					SetAnimationState(AnimationState::RUN);
-				}
+					mCurrentImage++;
 				mFrameCount = 0;
 			}
 			else
@@ -319,14 +342,6 @@ void Player::HandleAnimation()
 		case AnimationState::JUMP_SHOOT:
 		{
 			mAnimationName = "jump-shoot";
-
-			mMaxFrameCount = 15;
-
-			if (mFrameCount >= mMaxFrameCount)
-			{
-				mFrameCount = 0;
-			}
-
 			break;
 		}
 	}
@@ -351,6 +366,11 @@ void Player::Draw()
 	olc::vf2d drawPosition = { position.x - (decal->sprite->width / 2.0f) * (float)direction, position.y - decal->sprite->height / 2.0f };
 
 	game->DrawDecal(drawPosition - game->camera.offset, decal, { (float)direction , 1.0f});
+
+	for (Bullet& b : listBullets)
+	{
+		b.Draw();
+	}
 
 	//game->FillRectDecal(position - game->camera.offset, { 1, 1 }, olc::BLACK);
 	//game->FillRectDecal(olc::vf2d((position.x - 1), position.y) - game->camera.offset, { 1, 1 });
