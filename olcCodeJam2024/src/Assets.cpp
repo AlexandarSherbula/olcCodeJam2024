@@ -29,6 +29,23 @@ void Assets::LoadSprites()
 	load("walk15", "assets/sprites/player/walk/walk-15.png");
 	load("walk16", "assets/sprites/player/walk/walk-16.png");
 
+	load("walk-shoot1", "assets/sprites/player/walk-shoot/walk-shoot-1.png");
+	load("walk-shoot2", "assets/sprites/player/walk-shoot/walk-shoot-2.png");
+	load("walk-shoot3", "assets/sprites/player/walk-shoot/walk-shoot-3.png");
+	load("walk-shoot4", "assets/sprites/player/walk-shoot/walk-shoot-4.png");
+	load("walk-shoot5", "assets/sprites/player/walk-shoot/walk-shoot-5.png");
+	load("walk-shoot6", "assets/sprites/player/walk-shoot/walk-shoot-6.png");
+	load("walk-shoot7", "assets/sprites/player/walk-shoot/walk-shoot-7.png");
+	load("walk-shoot8", "assets/sprites/player/walk-shoot/walk-shoot-8.png");
+	load("walk-shoot9", "assets/sprites/player/walk-shoot/walk-shoot-9.png");
+	load("walk-shoot10", "assets/sprites/player/walk-shoot/walk-shoot-10.png");
+	load("walk-shoot11", "assets/sprites/player/walk-shoot/walk-shoot-11.png");
+	load("walk-shoot12", "assets/sprites/player/walk-shoot/walk-shoot-12.png");
+	load("walk-shoot13", "assets/sprites/player/walk-shoot/walk-shoot-13.png");
+	load("walk-shoot14", "assets/sprites/player/walk-shoot/walk-shoot-14.png");
+	load("walk-shoot15", "assets/sprites/player/walk-shoot/walk-shoot-15.png");
+	load("walk-shoot16", "assets/sprites/player/walk-shoot/walk-shoot-16.png");
+
 	load("run1", "assets/sprites/player/run/run-1.png");
 	load("run2", "assets/sprites/player/run/run-2.png");
 	load("run3", "assets/sprites/player/run/run-3.png");

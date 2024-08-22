@@ -23,9 +23,9 @@ Player::~Player()
 
 void Player::Update()
 {
-	Shoot();
-
 	Movement();
+
+	Shoot();
 
 	HandleAnimation();
 
@@ -41,35 +41,37 @@ void Player::Update()
 
 void Player::Shoot()
 {
-	if (game->GetMouse(0).bHeld && mCanShoot)
+	if (game->GetMouse(0).bHeld)
 	{
-		if (mAnimState == AnimationState::JUMP && mAnimState != AnimationState::JUMP_SHOOT)
+		if (mJumped)
 			SetAnimationState(AnimationState::JUMP_SHOOT);
 		else
 		{
-			if (std::abs(mGroundSpeed) >= 6.0f && mAnimState != AnimationState::RUN_SHOOT)
+			if (std::abs(mGroundSpeed) >= 6.0f)
 				SetAnimationState(AnimationState::RUN_SHOOT);
-			else if (std::abs(mGroundSpeed) < 6.0f && mAnimState != AnimationState::SHOOT)
+			else if(std::abs(mGroundSpeed) > 0.0f && std::abs(mGroundSpeed) < 6.0f)
+				SetAnimationState(AnimationState::WALK_SHOOT);
+			else
 				SetAnimationState(AnimationState::SHOOT);
+		}		
+
+		if (mCanShoot)
+		{
+			listBullets.push_back(Bullet(olc::vf2d(position.x + 15.0f * (int32_t)direction, position.y - 13.0f)));
+
+			mBulletFrameCount = 15;
+			mCanShoot = false;
 		}
+		else
+		{
+			mBulletFrameCount--;
 
-		game->shotPos.x = position.x + 15.0f * (int32_t)direction;
-		game->shotPos.y = position.y - 13.0f;
-
-		listBullets.push_back(Bullet(olc::vf2d(position.x + 15.0f * (int32_t)direction, position.y - 13.0f)));
-
-		mBulletFrameCount = 15;
-		mCanShoot = false;
-	}
-	else if (!mCanShoot)
-	{
-		mBulletFrameCount--;
-
-		if (mBulletFrameCount <= 0)
-			mCanShoot = true;
+			if (mBulletFrameCount <= 0)
+				mCanShoot = true;
+		}
 	}
 
-	if (!game->GetMouse(0).bHeld && (mAnimState == AnimationState::SHOOT || mAnimState == AnimationState::JUMP_SHOOT || mAnimState == AnimationState::RUN_SHOOT))
+	if (!game->GetMouse(0).bHeld)
 	{
 		if (std::abs(mGroundSpeed) >= 6.0f)
 			SetAnimationState(AnimationState::RUN);
@@ -97,7 +99,7 @@ void Player::Movement()
 
 		mJumped = true;
 		mCanJump = false;
-
+		
 		SetAnimationState(AnimationState::JUMP);
 	}
 
@@ -135,7 +137,7 @@ void Player::Movement()
 				}
 				else
 				{
-					if (!mJumped && mAnimState != AnimationState::SHOOT)
+					if (!mJumped && mAnimState != AnimationState::WALK_SHOOT)
 						SetAnimationState(AnimationState::WALK);
 				}
 			}
@@ -158,11 +160,11 @@ void Player::Movement()
 				{
 					mGroundSpeed = 6.0f;
 					if (!mJumped && mAnimState != AnimationState::RUN_SHOOT)
-						SetAnimationState(AnimationState::RUN);
+ 						SetAnimationState(AnimationState::RUN);
 				}
 				else
 				{
-					if (!mJumped && mAnimState != AnimationState::SHOOT)
+					if (!mJumped && mAnimState != AnimationState::WALK_SHOOT)
 						SetAnimationState(AnimationState::WALK);
 				}
 			}
@@ -250,9 +252,13 @@ void Player::HandleAnimation()
 
 			break;
 		}
-		case AnimationState::WALK:
+		case AnimationState::WALK: case AnimationState::WALK_SHOOT:
 		{
-			mAnimationName = "walk";
+			if (mAnimState == AnimationState::WALK)
+				mAnimationName = "walk";
+			else if (mAnimState == AnimationState::WALK_SHOOT)
+				mAnimationName = "walk-shoot";
+
 			mFirstImage = 1;
 			mLastImage = 16;
 	
@@ -271,9 +277,13 @@ void Player::HandleAnimation()
 
 			break;
 		}
-		case AnimationState::RUN:
+		case AnimationState::RUN: case AnimationState::RUN_SHOOT:
 		{
-			mAnimationName = "run";
+			if (mAnimState == AnimationState::RUN)
+				mAnimationName = "run";
+			else if (mAnimState == AnimationState::RUN_SHOOT)
+				mAnimationName = "run-shoot";
+			
 			mFirstImage = 1;
 			mLastImage = 8;
 
@@ -314,28 +324,6 @@ void Player::HandleAnimation()
 		case AnimationState::SHOOT:
 		{
 			mAnimationName = "shoot";
-
-			break;
-		}
-		case AnimationState::RUN_SHOOT:
-		{
-			mAnimationName = "run-shoot";
-
-			mFirstImage = 1;
-			mLastImage = 8;
-
-			mMaxFrameCount = 5;
-
-			if (mFrameCount >= mMaxFrameCount)
-			{
-				if (mCurrentImage >= mLastImage)
-					mCurrentImage = mFirstImage;
-				else
-					mCurrentImage++;
-				mFrameCount = 0;
-			}
-			else
-				mFrameCount++;
 
 			break;
 		}

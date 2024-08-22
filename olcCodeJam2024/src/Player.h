@@ -15,8 +15,9 @@ enum class State
 enum class AnimationState
 {
 	IDLE,
-	WALK,
 	SHOOT,
+	WALK,
+	WALK_SHOOT,
 	RUN,
 	RUN_SHOOT,
 	JUMP,

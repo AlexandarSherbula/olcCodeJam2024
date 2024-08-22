@@ -34,7 +34,7 @@ void Game::OnFixedUpdate()
 }
 
 bool Game::OnUserUpdate(float fElapsedTime)
-{
+{	
 	timer += fElapsedTime;
 
 	while (fixedTimeSimulated < timer)
