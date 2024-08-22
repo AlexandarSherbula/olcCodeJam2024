@@ -6,13 +6,15 @@ Player::Player()
 {
 	position = { 72.0f, 559.0f };
 	mAcceleration = 0.046875f;
-	mAirAcceleration = 0.093750f;
 	mDeceleration = 0.5f;
 	mGravityForce = 0.21875f;
 	mJumpForce = 6.5f;
 	
 	mCanShoot = true;
 	mBulletFrameCount = 0;
+
+	hitbox.position = { mPointA.position.x, position.y - 20.0f };
+	hitbox.size = { 21.0f, 52.5f };
 
 	SetAnimationState(AnimationState::IDLE);
 }
@@ -36,51 +38,48 @@ void Player::Update()
 		b.HandleAnimation();
 	}
 
-	listBullets.remove_if([&](const Bullet& b) {return b.position.x > game->ScreenWidth() + game->camera.offset.x || b.position.x < game->camera.offset.x || b.remove; });
+	listBullets.remove_if([&](const Bullet& b) {return b.position.x > game->ScreenWidth() + game->camera.offset.x || b.position.x < game->camera.offset.x || b.remove; });	
 }
 
 void Player::Shoot()
 {
-	if (game->GetMouse(0).bHeld)
+	if (game->GetMouse(0).bHeld && mCanShoot)
 	{
 		if (mJumped)
 			SetAnimationState(AnimationState::JUMP_SHOOT);
 		else
 		{
-			if (std::abs(mGroundSpeed) >= 6.0f)
+			if (mAnimState == AnimationState::RUN)
 				SetAnimationState(AnimationState::RUN_SHOOT);
-			else if(std::abs(mGroundSpeed) > 0.0f && std::abs(mGroundSpeed) < 6.0f)
+			else if (mAnimState == AnimationState::WALK)
 				SetAnimationState(AnimationState::WALK_SHOOT);
-			else
+			else if (mAnimState == AnimationState::IDLE)
 				SetAnimationState(AnimationState::SHOOT);
+		}
+		
+		listBullets.push_back(Bullet(olc::vf2d(position.x + 15.0f * (int32_t)direction, position.y - 13.0f)));
+		
+		mBulletFrameCount = 15;
+		mCanShoot = false;
+	}
+	else
+	{
+		if (!game->GetMouse(0).bHeld)
+		{
+			if (mAnimState == AnimationState::RUN_SHOOT)
+				SetAnimationState(AnimationState::RUN);
+			else if (mAnimState == AnimationState::WALK_SHOOT)
+				SetAnimationState(AnimationState::WALK);
+			else if (mAnimState == AnimationState::SHOOT)
+				SetAnimationState(AnimationState::IDLE);
 		}		
 
-		if (mCanShoot)
-		{
-			listBullets.push_back(Bullet(olc::vf2d(position.x + 15.0f * (int32_t)direction, position.y - 13.0f)));
-
-			mBulletFrameCount = 15;
-			mCanShoot = false;
-		}
-		else
+		if (!mCanShoot)
 		{
 			mBulletFrameCount--;
 
 			if (mBulletFrameCount <= 0)
 				mCanShoot = true;
-		}
-	}
-
-	if (!game->GetMouse(0).bHeld)
-	{
-		if (std::abs(mGroundSpeed) >= 6.0f)
-			SetAnimationState(AnimationState::RUN);
-		else
-		{
-			if (mGroundSpeed != 0.0f)
-				SetAnimationState(AnimationState::WALK);
-			else
-				SetAnimationState(AnimationState::IDLE);
 		}
 	}
 
@@ -218,8 +217,8 @@ void Player::SetAnimationState(AnimationState state)
 {
 	if (mAnimState != state)
 	{
-		mAnimState = state;
 		mCurrentImage = 1;
+		mAnimState = state;
 		mFrameCount = 0;
 	}	
 }
@@ -339,6 +338,8 @@ void Player::UpdateSensors()
 {
 	mPointA.position = { position.x - 10.0f, position.y + 33.0f };
 	mPointB.position = { position.x + 10.0f, position.y + 33.0f };
+
+	hitbox.position = { mPointA.position.x, position.y - 20.0f };
 }
 
 void Player::Draw()
@@ -365,7 +366,7 @@ void Player::Draw()
 	//game->FillRectDecal(olc::vf2d((position.x + 1), position.y) - game->camera.offset, { 1, 1 });
 	//game->FillRectDecal(olc::vf2d( position.x, position.y - 1 ) - game->camera.offset, { 1, 1 });
 	//game->FillRectDecal(olc::vf2d( position.x, position.y + 1 ) - game->camera.offset, { 1, 1 });
-
+	//
 	//DrawHitbox();
 }
 
@@ -378,5 +379,7 @@ void Player::DrawHitbox()
 
 		game->FillRectDecal(mPointA.position - game->camera.offset, { 1.0f, 1.0f });
 		game->FillRectDecal(mPointB.position - game->camera.offset, { 1.0f, 1.0f });
-	}	
+	}
+
+	game->FillRectDecal(hitbox.position - game->camera.offset, hitbox.size, olc::Pixel(255, 0, 255, 125));
 }

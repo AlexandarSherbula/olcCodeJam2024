@@ -35,7 +35,6 @@ private:
 	AnchorPoint mPointB;
 
 	float mAcceleration;
-	float mAirAcceleration;
 	float mDeceleration;
 	float mGroundSpeed;
 	float mGravityForce;
@@ -48,6 +47,7 @@ private:
 
 	bool mCanShoot;
 	int32_t mBulletFrameCount;
+public:
 	std::list<Bullet> listBullets;
 public:
 	Player();

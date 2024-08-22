@@ -60,9 +60,56 @@
          "width":204,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":2,
+         "name":"Enemy",
+         "objects":[
+                {
+                 "gid":385,
+                 "height":52,
+                 "id":4,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":55,
+                 "x":858.333333333333,
+                 "y":415.333333333333
+                }, 
+                {
+                 "gid":385,
+                 "height":52,
+                 "id":5,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":55,
+                 "x":468.5,
+                 "y":496
+                }, 
+                {
+                 "gid":385,
+                 "height":52,
+                 "id":6,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":55,
+                 "x":1227,
+                 "y":416
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":2,
- "nextobjectid":1,
+ "nextlayerid":3,
+ "nextobjectid":7,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
@@ -70,7 +117,11 @@
  "tilesets":[
         {
          "firstgid":1,
-         "source":"..\/..\/..\/..\/..\/..\/Tiled\/Tilesets\/olcCodeJam2024_tileset.tsx"
+         "source":"..\/..\/..\/..\/..\/Tiled\/Tilesets\/olcCodeJam2024_tileset.tsx"
+        }, 
+        {
+         "firstgid":385,
+         "source":"..\/..\/..\/..\/..\/Tiled\/Tilesets\/drone.tsx"
         }],
  "tilewidth":16,
  "type":"map",

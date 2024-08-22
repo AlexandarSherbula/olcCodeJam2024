@@ -5,6 +5,7 @@
 #include "Camera.h"
 
 #include "Player.h"
+#include "Drone.h"
 #include "Bullet.h"
 
 #include "olcPGEX_MiniAudio.h"
@@ -31,13 +32,13 @@ public:
 
 public:
 	Player player;
+	std::list<Drone> listDrones;
+
 	Map map;
 	Camera camera;
 
 	double timer;
 	double fixedTimeSimulated;
-	olc::vf2d shotPos;
-	float shotSpeed;
 
 	olc::MiniAudio ma;
 	int32_t song1;

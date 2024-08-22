@@ -19,12 +19,21 @@ public:
 	AnchorPoint(const olc::vi2d& direction);
 };
 
+struct HitBox
+{
+	float widthRad;
+	float heightRad;
+	olc::vf2d position;
+	olc::vf2d size;
+};
+
 class Object
 {
 public:
 	olc::vf2d position;
 	olc::vf2d speed;
 	Direction direction;
+	HitBox hitbox;
 public:
 	Object();
 	Object(const olc::vf2d& position);

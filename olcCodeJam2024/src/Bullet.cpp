@@ -15,6 +15,8 @@ Bullet::Bullet(const olc::vf2d& position, const olc::Pixel& colorTint)
 	mLastImage = 3;
 	mMaxFrameCount = 5;
 
+	hitbox.size = { (float)Assets::get().GetDecal("shot1")->sprite->width, (float)Assets::get().GetDecal("shot1")->sprite->height };
+
 	remove = false;
 }
 
@@ -28,6 +30,9 @@ void Bullet::Update()
 void Bullet::Travel()
 {
 	position.x += 10.0f * (int32_t)direction;
+
+	hitbox.position.x = (direction == Direction::LEFT) ? position.x - hitbox.size.x : position.x;
+	hitbox.position.y = position.y;
 }
 
 void Bullet::HandleAnimation()
@@ -47,4 +52,6 @@ void Bullet::HandleAnimation()
 void Bullet::Draw()
 {
 	game->DrawDecal(position - game->camera.offset, Assets::get().GetDecal("shot" + std::to_string(mCurrentImage)), { (float)direction, 1.0f}, mColorTint);
+
+	//game->FillRectDecal(hitbox.position - game->camera.offset, hitbox.size, olc::Pixel(255, 0, 255, 125));
 }
