@@ -115,11 +115,19 @@ bool Game::OnUserUpdate(float fElapsedTime)
 
 		for (auto& drone : listDrones)
 			drone.Draw();
-	}	
+
+		listDrones.remove_if([&](const Drone& drone) {return drone.remove; });
+	}
+	else
+	{
+		if (countdownToReset <= 120)
+		{
+			std::string text = "YOU'VE RUN OUT OF LUCK!!!!";
+			DrawStringDecal({ (ScreenWidth() / 2.0f) - (text.size() * 16.0f) / 2.0f, game->ScreenHeight() - 64.0f}, text, olc::WHITE, {2.0f, 2.0f});
+		}
+	}
 	
 	player.Draw();
-
-	listDrones.remove_if([&](const Drone& drone) {return drone.remove; });
 
 	return !GetKey(olc::ESCAPE).bPressed;
 }

@@ -45,7 +45,7 @@ public:
 	olc::MiniAudio ma;
 	int32_t song1;
 	
-	int8_t countdownToReset;
+	int32_t countdownToReset;
 
 };
 
