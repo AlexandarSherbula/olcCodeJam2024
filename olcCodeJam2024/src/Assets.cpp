@@ -72,6 +72,8 @@ void Assets::LoadSprites()
 	load("run-shoot7",          "assets/sprites/player/run-shoot/run-shoot-7.png");
 	load("run-shoot8",          "assets/sprites/player/run-shoot/run-shoot-8.png");
 
+	load("hurt",                "assets/sprites/player/hurt/hurt.png");
+
 	load("drone1",              "assets/sprites/misc/drone/drone-1.png");
 	load("drone2",              "assets/sprites/misc/drone/drone-2.png");
 	load("drone3",              "assets/sprites/misc/drone/drone-3.png");

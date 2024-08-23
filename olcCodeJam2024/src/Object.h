@@ -57,4 +57,8 @@ public:
 	AnimatedObject();
 
 	virtual void HandleAnimation();
+
+	virtual void Reset();
 };
+
+bool CheckCollision(HitBox& one, HitBox& two);

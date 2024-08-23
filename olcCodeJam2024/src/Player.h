@@ -47,8 +47,19 @@ private:
 
 	bool mCanShoot;
 	int32_t mBulletFrameCount;
+
+
+	uint8_t mHitFrameCount;
+	uint8_t mTempInvicibleFrameCount;
+
+	uint8_t mAlpha;
 public:
 	std::list<Bullet> listBullets;
+
+	uint8_t health;
+	bool tempInvicible;
+	bool hit;
+	bool death;
 public:
 	Player();
 	~Player();
@@ -60,6 +71,9 @@ public:
 	void SetAnimationState(AnimationState state);
 	void HandleAnimation() override;
 	void Draw() override;
+	void Reset() override;
+
+	void ResetSpeed();
 private:
 	void UpdateSensors();
 	void FindSurface(AnchorPoint& point);

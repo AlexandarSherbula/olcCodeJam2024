@@ -13,6 +13,8 @@ public:
 	void Load(const std::string& imageFilePath, const std::string& jsonFilePath);
 	void Draw();
 
+	void Reset();
+
 	int32_t GetTileID(olc::vi2d unitPos);
 private:
 	void WrapBackgroundImage(float& spritePosX, float spriteWidth, float scrollSpeed, int lastImageIterator = 0);

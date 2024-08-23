@@ -30,6 +30,8 @@ public:
 
 	void OnFixedUpdate();
 
+	void Reset();
+
 public:
 	Player player;
 	std::list<Drone> listDrones;
@@ -42,6 +44,9 @@ public:
 
 	olc::MiniAudio ma;
 	int32_t song1;
+	
+	int8_t countdownToReset;
+
 };
 
 inline Game* game;

@@ -24,11 +24,11 @@ void Drone::Update()
 {
 	if (!destroyed)
 	{
-		mSpeed = 2 * std::cosf(game->timer);
-		position.x += mSpeed;
+		mSpeed.x = 2 * std::cosf(game->timer);
+		position.x += mSpeed.x;
 	}
 
-	if (std::abs(mSpeed) < 0.05f)
+	if (std::abs(mSpeed.x) < 0.05f)
 		mRotateAnimation = true;
 
 	if (mRotateAnimation || destroyed)
@@ -94,7 +94,7 @@ void Drone::Draw()
 
 	olc::vf2d drawPosition = { position.x + (decal->sprite->width / 2.0f) * (float)direction, position.y - decal->sprite->height / 2.0f };
 
-	game->DrawDecal(drawPosition - game->camera.offset, decal, {-(float)direction, 1.0f});
+	game->DrawDecal(drawPosition - game->camera.offset, decal, { -(float)direction, 1.0f });
 
 	//game->FillRectDecal(position - game->camera.offset, { 1, 1 }, olc::BLACK);
 	//game->FillRectDecal(olc::vf2d((position.x - 1), position.y) - game->camera.offset, { 1, 1 });
@@ -104,4 +104,8 @@ void Drone::Draw()
 
 	//game->FillRectDecal(hitbox.position - game->camera.offset, hitbox.size, olc::Pixel(255, 0, 255, 125));
 
+}
+
+void Drone::Reset()
+{
 }

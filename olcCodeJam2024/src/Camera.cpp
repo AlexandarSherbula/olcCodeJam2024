@@ -18,8 +18,6 @@ void Camera::Create()
 
 void Camera::Update()
 {
-    olc::vf2d localOffset = game->player.position - (focalPoint + offset);
-
     if (game->player.position.x < mLeftBorder)
         offset.x = (game->player.position.x + 8.0f) - focalPoint.x;
     else if (game->player.position.x > mRightBorder)
@@ -39,7 +37,6 @@ void Camera::Update()
     mRightBorder = focalPoint.x + 8.0f + offset.x;
     mTopBorder = focalPoint.y - 32.0f + offset.y;
     mBottomBorder = focalPoint.y + 32.0f + offset.y;
-
 }
 
 void Camera::DrawBorders()

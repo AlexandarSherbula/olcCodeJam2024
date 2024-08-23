@@ -127,3 +127,12 @@ void Map::Draw()
 	
 	game->DrawDecal(-game->camera.offset, mGFX.Decal());
 }
+
+void Map::Reset()
+{
+	if (!mTileIDs.empty())
+		mTileIDs.clear();
+
+	for (int32_t i = 0; i < mUnitWidth * mUnitHeight; i++)
+		mTileIDs.push_back(mJson["layers"][0]["data"][i]);
+}

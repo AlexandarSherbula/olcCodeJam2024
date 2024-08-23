@@ -6,6 +6,8 @@ Game::Game()
 	sAppName = "olcCodeJam2024";
 	timer = 0.0f;
 	fixedTimeSimulated = 0.0f;
+
+	countdownToReset = 180;
 }
 
 Game::~Game()
@@ -28,27 +30,71 @@ bool Game::OnUserCreate()
 }
 
 void Game::OnFixedUpdate()
-{	
-	player.Update();
-
-	for (auto& drone : listDrones)
-		drone.Update();
-
-	camera.Update();
-
-	for (auto& b : player.listBullets)
+{
+	if (!player.death)
 	{
+		player.Update();
+
+		for (auto& drone : listDrones)
+			drone.Update();
+
+		camera.Update();
+
 		for (auto& drone : listDrones)
 		{
-			//PRINTLN(b.position);
-			if (b.position.x > drone.hitbox.position.x && b.position.x < drone.hitbox.position.x + drone.hitbox.size.x &&
-				b.position.y > drone.hitbox.position.y && b.position.y < drone.hitbox.position.y + drone.hitbox.size.y)
+			for (auto& b : player.listBullets)
 			{
-				drone.destroyed = true;
-				b.remove = true;
+				if (CheckCollision(b.hitbox, drone.hitbox))
+				{
+					drone.destroyed = true;
+					b.remove = true;
+				}
+
+				if (drone.destroyed)
+					break;
+			}
+			if (drone.destroyed)
+				continue;
+
+			if (CheckCollision(player.hitbox, drone.hitbox) && !player.tempInvicible)
+			{
+				player.ResetSpeed();
+				if (!player.hit)
+				{
+					player.health--;
+					player.hit = true;
+				}
 			}
 		}
 	}
+	else
+	{
+		//fadeToBlack--;
+		//if (fadeToBlack < 0)
+		//	fadeToBlack = 0;
+
+		countdownToReset--;
+		if (countdownToReset == 0)
+		{
+			player.death = false;
+			game->Reset();
+		}
+	}
+}
+
+void Game::Reset()
+{
+	countdownToReset = 180;
+	timer = 0.0f;
+	fixedTimeSimulated = 0.0f;
+
+	map.Reset();
+	player.Reset();
+
+	if (!listDrones.empty())
+		listDrones.clear();
+
+	listDrones.push_back(Drone({ 512.0f, 470.0f }));
 }
 
 bool Game::OnUserUpdate(float fElapsedTime)
@@ -61,12 +107,15 @@ bool Game::OnUserUpdate(float fElapsedTime)
 		fixedTimeSimulated += 1.0f / 60.0f;
 	}
 
-	Clear(olc::VERY_DARK_BLUE);
+	Clear(olc::BLACK);
 
-	map.Draw();
+	if (!player.death)
+	{
+		map.Draw();
 
-	for (auto& drone : listDrones)
-		drone.Draw();
+		for (auto& drone : listDrones)
+			drone.Draw();
+	}	
 	
 	player.Draw();
 

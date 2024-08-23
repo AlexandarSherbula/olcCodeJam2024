@@ -14,10 +14,11 @@ public:
 	void HandleAnimation() override;
 
 	void Draw() override;
+	void Reset() override;
 public:
 	bool destroyed;
 	bool remove;
 private:
-	float mSpeed;
+	olc::vf2d mSpeed;
 	bool mRotateAnimation;
 };
