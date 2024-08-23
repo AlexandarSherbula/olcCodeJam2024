@@ -112,10 +112,10 @@ bool Game::OnUserUpdate(float fElapsedTime)
 	if (!player.death)
 	{
 		map.Draw();
-
+	
 		for (auto& drone : listDrones)
 			drone.Draw();
-
+	
 		listDrones.remove_if([&](const Drone& drone) {return drone.remove; });
 	}
 	else
@@ -128,6 +128,12 @@ bool Game::OnUserUpdate(float fElapsedTime)
 	}
 	
 	player.Draw();
+
+	if (!player.death)
+	{
+		FillRectDecal(olc::vf2d(8.0f, 8.0f), olc::vf2d(92.0f, 11.0f), olc::DARK_GREY);
+		FillRectDecal(olc::vf2d(9.0f, 9.0f), olc::vf2d(player.health * 18.0f, 9.0f), olc::RED);
+	}
 
 	return !GetKey(olc::ESCAPE).bPressed;
 }

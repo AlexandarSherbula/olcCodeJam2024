@@ -23,7 +23,7 @@ Player::Player()
 
 	mAlpha = 255;
 
-	health = 1;
+	health = 5;
 
 	SetAnimationState(AnimationState::IDLE);
 }
@@ -453,7 +453,7 @@ void Player::Reset()
 
 	mAlpha = 255;
 
-	health = 1;
+	health = 5;
 
 	SetAnimationState(AnimationState::IDLE);
 }
