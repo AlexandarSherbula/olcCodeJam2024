@@ -8,6 +8,10 @@ Game::Game()
 	fixedTimeSimulated = 0.0f;
 
 	countdownToReset = 180;
+
+	countdownToCops = 300.0f;
+
+	timerTextColor = olc::WHITE;
 }
 
 Game::~Game()
@@ -22,11 +26,66 @@ bool Game::OnUserCreate()
 
 	camera.Create();
 
-	listDrones.push_back(Drone({512.0f, 470.0f}));
-
 	map.Load("assets/sprites/map01.png", "assets/json/olcCodeJam2024_map.json");
 
 	return true;
+}
+
+bool Game::OnUserUpdate(float fElapsedTime)
+{	
+	timer += fElapsedTime;
+	countdownToCops -= fElapsedTime;
+
+	while (fixedTimeSimulated < timer)
+	{
+		OnFixedUpdate();
+		fixedTimeSimulated += 1.0f / 60.0f;
+	}
+
+	map.Update();
+
+	Clear(olc::BLACK);
+
+	if (!player.death)
+	{
+		map.Draw();
+	}
+	else
+	{
+		if (countdownToReset <= 120)
+		{
+			std::string text = "YOU'VE RUN OUT OF LUCK!!!!";
+			DrawStringDecal({ (ScreenWidth() / 2.0f) - (text.size() * 16.0f) / 2.0f, game->ScreenHeight() - 64.0f}, text, olc::WHITE, {2.0f, 2.0f});
+		}
+	}
+	
+	player.Draw();
+
+	if (!player.death)
+	{
+		FillRectDecal(olc::vf2d(8.0f, 8.0f), olc::vf2d(92.0f, 11.0f), olc::DARK_GREY);
+		FillRectDecal(olc::vf2d(9.0f, 9.0f), olc::vf2d(player.health * 18.0f, 9.0f), olc::GREEN);
+
+
+		int32_t minutes = countdownToCops / 60;
+		int32_t seconds = (int32_t)countdownToCops % 60;
+
+		std::string strMinutes = (minutes < 10) ? "0" + std::to_string(minutes) : std::to_string(minutes);
+		std::string strSeconds = (seconds < 10) ? "0" + std::to_string(seconds) : std::to_string(seconds);
+
+		if (countdownToCops < 60.0f)
+		{
+			timerTextColor = olc::RED;
+		}
+
+		DrawStringDecal(olc::vf2d(8.0f, 32.0f), strMinutes + ":" + strSeconds, timerTextColor, { 2.0f, 2.0f });
+	}
+
+#if _DEBUG
+	return !GetKey(olc::ESCAPE).bPressed;
+#else
+	return true;
+#endif // _DEBUG
 }
 
 void Game::OnFixedUpdate()
@@ -35,12 +94,12 @@ void Game::OnFixedUpdate()
 	{
 		player.Update();
 
-		for (auto& drone : listDrones)
+		for (auto& drone : map.listDrones)
 			drone.Update();
 
 		camera.Update();
 
-		for (auto& drone : listDrones)
+		for (auto& drone : map.listDrones)
 		{
 			for (auto& b : player.listBullets)
 			{
@@ -66,13 +125,39 @@ void Game::OnFixedUpdate()
 				}
 			}
 		}
+
+		for (auto& ladder : map.vecLadders)
+		{
+			if (CheckCollision(player.hitbox, ladder.hitbox))
+			{
+				if (GetKey(olc::W).bHeld)
+				{
+					if (!player.isClimbing)
+					{
+						player.isClimbing = true;
+						player.SetAnimationState(AnimationState::CLIMB);
+					}
+					player.Climb(ladder.hitbox.position);
+				}
+				else
+					player.climbMove = false;
+
+				if (player.position.y + 10.0f < ladder.position.y && player.isClimbing)
+				{
+					player.isClimbing = false;
+					player.SetAnimationState(AnimationState::IDLE);
+				}
+				
+			}
+		}
+
+		if (player.position.y + 35.0f > map.size.y)
+		{
+			player.death = true;
+		}
 	}
 	else
 	{
-		//fadeToBlack--;
-		//if (fadeToBlack < 0)
-		//	fadeToBlack = 0;
-
 		countdownToReset--;
 		if (countdownToReset == 0)
 		{
@@ -87,55 +172,8 @@ void Game::Reset()
 	countdownToReset = 180;
 	timer = 0.0f;
 	fixedTimeSimulated = 0.0f;
+	countdownToCops = 300.0f;
 
 	map.Reset();
 	player.Reset();
-
-	if (!listDrones.empty())
-		listDrones.clear();
-
-	listDrones.push_back(Drone({ 512.0f, 470.0f }));
 }
-
-bool Game::OnUserUpdate(float fElapsedTime)
-{	
-	timer += fElapsedTime;
-
-	while (fixedTimeSimulated < timer)
-	{
-		OnFixedUpdate();
-		fixedTimeSimulated += 1.0f / 60.0f;
-	}
-
-	Clear(olc::BLACK);
-
-	if (!player.death)
-	{
-		map.Draw();
-	
-		for (auto& drone : listDrones)
-			drone.Draw();
-	
-		listDrones.remove_if([&](const Drone& drone) {return drone.remove; });
-	}
-	else
-	{
-		if (countdownToReset <= 120)
-		{
-			std::string text = "YOU'VE RUN OUT OF LUCK!!!!";
-			DrawStringDecal({ (ScreenWidth() / 2.0f) - (text.size() * 16.0f) / 2.0f, game->ScreenHeight() - 64.0f}, text, olc::WHITE, {2.0f, 2.0f});
-		}
-	}
-	
-	player.Draw();
-
-	if (!player.death)
-	{
-		FillRectDecal(olc::vf2d(8.0f, 8.0f), olc::vf2d(92.0f, 11.0f), olc::DARK_GREY);
-		FillRectDecal(olc::vf2d(9.0f, 9.0f), olc::vf2d(player.health * 18.0f, 9.0f), olc::RED);
-	}
-
-	return !GetKey(olc::ESCAPE).bPressed;
-}
-
-

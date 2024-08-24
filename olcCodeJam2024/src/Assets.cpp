@@ -61,6 +61,13 @@ void Assets::LoadSprites()
 	load("jump3",               "assets/sprites/player/jump/jump-3.png");
 	load("jump4",               "assets/sprites/player/jump/jump-4.png");
 
+	load("climb1",               "assets/sprites/player/climb/climb-1.png");
+	load("climb2",               "assets/sprites/player/climb/climb-2.png");
+	load("climb3",               "assets/sprites/player/climb/climb-3.png");
+	load("climb4",               "assets/sprites/player/climb/climb-4.png");
+	load("climb5",               "assets/sprites/player/climb/climb-5.png");
+	load("climb6",               "assets/sprites/player/climb/climb-6.png");
+
 	load("shoot",               "assets/sprites/player/shoot/shoot.png");
 
 	load("run-shoot1",          "assets/sprites/player/run-shoot/run-shoot-1.png");

@@ -7,6 +7,7 @@
 #include "Player.h"
 #include "Drone.h"
 #include "Bullet.h"
+#include "Ladder.h"
 
 #include "olcPGEX_MiniAudio.h"
 
@@ -34,19 +35,19 @@ public:
 
 public:
 	Player player;
-	std::list<Drone> listDrones;
 
 	Map map;
 	Camera camera;
 
 	double timer;
 	double fixedTimeSimulated;
+	double countdownToCops;
+	olc::Pixel timerTextColor;
 
 	olc::MiniAudio ma;
 	int32_t song1;
 	
 	int32_t countdownToReset;
-
 };
 
 inline Game* game;

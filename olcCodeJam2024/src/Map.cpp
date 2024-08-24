@@ -41,6 +41,36 @@ void Map::Load(const std::string& imageFilePath, const std::string& jsonFilePath
 	for (int32_t i = 0; i < mUnitWidth * mUnitHeight; i++)
 		mTileIDs.push_back(mJson["layers"][0]["data"][i]);
 
+	for (int32_t i = 0; i < mJson["layers"][1]["objects"].size(); i++)
+	{
+		olc::vf2d dronePosition =
+		{
+			mJson["layers"][1]["objects"][i]["x"],
+			mJson["layers"][1]["objects"][i]["y"]
+		};
+
+		listDrones.push_back(Drone(dronePosition));
+	}
+
+	for (int i = 2; i < 4; i++)
+	{
+		float ladderHeight = 0.0f;
+		float PosX = mJson["layers"][i]["objects"][0]["x"];
+		float PosY = mJson["layers"][i]["objects"][0]["y"] - 16.0f;
+		for (int32_t j = 0; j < mJson["layers"][i]["objects"].size(); j++)
+		{
+			int32_t PosX = mJson["layers"][i]["objects"][j]["x"];
+			int32_t PosY = mJson["layers"][i]["objects"][j]["y"];
+
+			ladderHeight += 16.0f;
+		}
+
+		vecLadders.push_back(Ladder({ PosX, PosY }, ladderHeight));
+	}
+	
+
+	
+
 	spriteWidths[0] = 0.0f;
 	spriteWidths[1] = Assets::get().GetDecal("skyline-city")->sprite->width * 2.0f;
 	spriteWidths[2] = Assets::get().GetDecal("skyline-city")->sprite->width * 4.0f;
@@ -54,6 +84,11 @@ void Map::Load(const std::string& imageFilePath, const std::string& jsonFilePath
 	spriteWidths[8] = 0.0f;
 	spriteWidths[9] = Assets::get().GetDecal("near-buildings-bg")->sprite->width;
 	spriteWidths[10] = Assets::get().GetDecal("near-buildings-bg")->sprite->width * 2.0f;
+}
+
+void Map::Update()
+{
+	listDrones.remove_if([&](const Drone& drone) {return drone.remove; });
 }
 
 int32_t Map::GetTileID(olc::vi2d unitPos)
@@ -88,7 +123,7 @@ void Map::Draw()
 {
 	olc::vf2d scale = {2.0f, 2.0f};
 
-	game->DrawDecal(olc::vf2d(0.0f, 0.0f), Assets::get().GetDecal("skyline"), scale);
+	game->DrawDecal(olc::vf2d(0.0f, -80.0f), Assets::get().GetDecal("skyline"), scale);
 
 	float spriteWidth = Assets::get().GetDecal("skyline-city")->sprite->width * scale.x;
 	float spriteHeight = Assets::get().GetDecal("skyline")->sprite->height * scale.y;
@@ -98,10 +133,10 @@ void Map::Draw()
 	WrapBackgroundImage(spriteWidths[2], spriteWidth, -game->camera.offset.x / 48.0f, 3);
 	WrapBackgroundImage(spriteWidths[3], spriteWidth, -game->camera.offset.x / 48.0f, 3);
 	
-	game->DrawDecal(olc::vf2d(spriteWidths[0] - game->camera.offset.x / 48.0f, spriteHeight), Assets::get().GetDecal("skyline-city"), scale);
-	game->DrawDecal(olc::vf2d(spriteWidths[1] - game->camera.offset.x / 48.0f, spriteHeight), Assets::get().GetDecal("skyline-city"), scale);
-	game->DrawDecal(olc::vf2d(spriteWidths[2] - game->camera.offset.x / 48.0f, spriteHeight), Assets::get().GetDecal("skyline-city"), scale);
-	game->DrawDecal(olc::vf2d(spriteWidths[3] - game->camera.offset.x / 48.0f, spriteHeight), Assets::get().GetDecal("skyline-city"), scale);
+	game->DrawDecal(olc::vf2d(spriteWidths[0] - game->camera.offset.x / 48.0f, spriteHeight - 80.0f), Assets::get().GetDecal("skyline-city"), scale);
+	game->DrawDecal(olc::vf2d(spriteWidths[1] - game->camera.offset.x / 48.0f, spriteHeight - 80.0f), Assets::get().GetDecal("skyline-city"), scale);
+	game->DrawDecal(olc::vf2d(spriteWidths[2] - game->camera.offset.x / 48.0f, spriteHeight - 80.0f), Assets::get().GetDecal("skyline-city"), scale);
+	game->DrawDecal(olc::vf2d(spriteWidths[3] - game->camera.offset.x / 48.0f, spriteHeight - 80.0f), Assets::get().GetDecal("skyline-city"), scale);
 	
 	spriteWidth = Assets::get().GetDecal("buildings-bg")->sprite->width * scale.x;
 
@@ -126,6 +161,10 @@ void Map::Draw()
 	game->DrawDecal(olc::vf2d(spriteWidths[10] - game->camera.offset.x / 12.0f, 180.0f - game->camera.offset.y / 24.0f), Assets::get().GetDecal("near-buildings-bg"));
 	
 	game->DrawDecal(-game->camera.offset, mGFX.Decal());
+
+
+	for (auto& drone : listDrones)
+		drone.Draw();
 }
 
 void Map::Reset()
@@ -135,4 +174,18 @@ void Map::Reset()
 
 	for (int32_t i = 0; i < mUnitWidth * mUnitHeight; i++)
 		mTileIDs.push_back(mJson["layers"][0]["data"][i]);
+
+	if (!listDrones.empty())
+		listDrones.clear();
+
+	for (int32_t i = 0; i < mJson["layers"][1]["objects"].size(); i++)
+	{
+		olc::vf2d dronePosition =
+		{
+			mJson["layers"][1]["objects"][i]["x"],
+			mJson["layers"][1]["objects"][i]["y"]
+		};
+
+		listDrones.push_back(Drone(dronePosition));
+	}
 }

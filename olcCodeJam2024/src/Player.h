@@ -60,6 +60,9 @@ public:
 	bool tempInvicible;
 	bool hit;
 	bool death;
+	
+	bool climbMove;
+	bool isClimbing;
 public:
 	Player();
 	~Player();
@@ -72,6 +75,8 @@ public:
 	void HandleAnimation() override;
 	void Draw() override;
 	void Reset() override;
+
+	void Climb(olc::vf2d& ladderPos);
 
 	void ResetSpeed();
 private:

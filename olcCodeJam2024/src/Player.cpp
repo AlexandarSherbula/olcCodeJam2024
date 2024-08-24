@@ -16,6 +16,9 @@ Player::Player()
 	hitbox.position = { mPointA.position.x, position.y - 20.0f };
 	hitbox.size = { 21.0f, 52.5f };
 
+	climbMove = false;
+	isClimbing = false;
+
 	hit = false;
 	tempInvicible = false;
 	mTempInvicibleFrameCount = 0;
@@ -24,6 +27,7 @@ Player::Player()
 	mAlpha = 255;
 
 	health = 5;
+
 
 	SetAnimationState(AnimationState::IDLE);
 }
@@ -129,97 +133,100 @@ void Player::Shoot()
 
 void Player::Movement()
 {
-	if (!hit)
+	if (!isClimbing)
 	{
-		if (!game->GetKey(olc::SPACE).bHeld)
+		if (!hit)
 		{
-			mCanJump = true;
-		}
-
-		if (game->GetKey(olc::SPACE).bHeld && !mJumped && mCanJump)
-		{
-			speed.y -= mJumpForce;
-
-			mJumped = true;
-			mCanJump = false;
-
-			SetAnimationState(AnimationState::JUMP);
-		}
-
-		if (game->GetKey(olc::SPACE).bReleased)
-		{
-			if (speed.y < -4.0f)
-				speed.y = -4.0f;
-		}
-
-		if (game->GetKey(olc::A).bHeld == game->GetKey(olc::D).bHeld)
-		{
-			mGroundSpeed -= std::min(std::fabs(mGroundSpeed), 0.046875f) * ((mGroundSpeed > 0.0f) ? 1.0f : -1.0f);
-		}
-		else
-		{
-			if (game->GetKey(olc::A).bHeld)
+			if (!game->GetKey(olc::SPACE).bHeld)
 			{
-				if (mGroundSpeed > 0.0f)
+				mCanJump = true;
+			}
+
+			if (game->GetKey(olc::SPACE).bHeld && !mJumped && mCanJump)
+			{
+				speed.y -= mJumpForce;
+
+				mJumped = true;
+				mCanJump = false;
+
+				SetAnimationState(AnimationState::JUMP);
+			}
+
+			if (game->GetKey(olc::SPACE).bReleased)
+			{
+				if (speed.y < -4.0f)
+					speed.y = -4.0f;
+			}
+
+			if (game->GetKey(olc::A).bHeld == game->GetKey(olc::D).bHeld)
+			{
+				mGroundSpeed -= std::min(std::fabs(mGroundSpeed), 0.046875f) * ((mGroundSpeed > 0.0f) ? 1.0f : -1.0f);
+			}
+			else
+			{
+				if (game->GetKey(olc::A).bHeld)
 				{
-					mGroundSpeed -= mDeceleration;
-					if (mGroundSpeed <= 0.0f)
+					if (mGroundSpeed > 0.0f)
 					{
-						mGroundSpeed = -mDeceleration;
-					}
-				}
-				else
-				{
-					direction = Direction::LEFT;
-					mGroundSpeed -= mAcceleration;
-					if (mGroundSpeed <= -6.0f)
-					{
-						mGroundSpeed = -6.0f;
-						if (!mJumped && mAnimState != AnimationState::RUN_SHOOT)
-							SetAnimationState(AnimationState::RUN);
+						mGroundSpeed -= mDeceleration;
+						if (mGroundSpeed <= 0.0f)
+						{
+							mGroundSpeed = -mDeceleration;
+						}
 					}
 					else
 					{
-						if (!mJumped && mAnimState != AnimationState::WALK_SHOOT)
-							SetAnimationState(AnimationState::WALK);
+						direction = Direction::LEFT;
+						mGroundSpeed -= mAcceleration;
+						if (mGroundSpeed <= -6.0f)
+						{
+							mGroundSpeed = -6.0f;
+							if (!mJumped && mAnimState != AnimationState::RUN_SHOOT)
+								SetAnimationState(AnimationState::RUN);
+						}
+						else
+						{
+							if (!mJumped && mAnimState != AnimationState::WALK_SHOOT)
+								SetAnimationState(AnimationState::WALK);
+						}
 					}
 				}
-			}
-			if (game->GetKey(olc::D).bHeld)
-			{
-				if (mGroundSpeed < 0.0f)
+				if (game->GetKey(olc::D).bHeld)
 				{
-					mGroundSpeed += mDeceleration;
-					if (mGroundSpeed >= 0.0f)
+					if (mGroundSpeed < 0.0f)
 					{
-						mGroundSpeed = mDeceleration;
-					}
-				}
-				else
-				{
-					direction = Direction::RIGHT;
-					mGroundSpeed += mAcceleration;
-					if (mGroundSpeed >= 6.0f)
-					{
-						mGroundSpeed = 6.0f;
-						if (!mJumped && mAnimState != AnimationState::RUN_SHOOT)
-							SetAnimationState(AnimationState::RUN);
+						mGroundSpeed += mDeceleration;
+						if (mGroundSpeed >= 0.0f)
+						{
+							mGroundSpeed = mDeceleration;
+						}
 					}
 					else
 					{
-						if (!mJumped && mAnimState != AnimationState::WALK_SHOOT)
-							SetAnimationState(AnimationState::WALK);
+						direction = Direction::RIGHT;
+						mGroundSpeed += mAcceleration;
+						if (mGroundSpeed >= 6.0f)
+						{
+							mGroundSpeed = 6.0f;
+							if (!mJumped && mAnimState != AnimationState::RUN_SHOOT)
+								SetAnimationState(AnimationState::RUN);
+						}
+						else
+						{
+							if (!mJumped && mAnimState != AnimationState::WALK_SHOOT)
+								SetAnimationState(AnimationState::WALK);
+						}
 					}
 				}
 			}
+
+			speed.x = mGroundSpeed;
 		}
 
-		speed.x = mGroundSpeed;
+		speed.y += mGravityForce;
+		if (speed.y > 16.0f)
+			speed.y = 16.0f;
 	}
-
-	speed.y += mGravityForce;
-	if (speed.y > 16.0f)
-		speed.y = 16.0f;
 
 	position += speed;
 
@@ -270,7 +277,7 @@ void Player::SetAnimationState(AnimationState state)
 
 void Player::HandleAnimation()
 {
-	if (mGroundSpeed == 0.0f && mAnimState != AnimationState::SHOOT && mAnimState != AnimationState::JUMP)
+	if (mGroundSpeed == 0.0f && mAnimState != AnimationState::SHOOT && mAnimState != AnimationState::JUMP && mAnimState != AnimationState::CLIMB)
 		SetAnimationState(AnimationState::IDLE);
 
 	switch (mAnimState)
@@ -376,6 +383,33 @@ void Player::HandleAnimation()
 			mAnimationName = "jump-shoot";
 			break;
 		}
+		case AnimationState::CLIMB:
+		{
+			mAnimationName = "climb";
+
+			mFirstImage = 1;
+			mLastImage = 4;
+
+			mMaxFrameCount = 5;
+
+			if (mFrameCount >= mMaxFrameCount)
+			{
+				if (climbMove)
+				{
+					if (mCurrentImage >= mLastImage)
+						mCurrentImage = mFirstImage;
+					else
+						mCurrentImage++;
+					mFrameCount = 0;
+				}
+				
+			}
+			else
+				mFrameCount++;
+
+			break;
+		}
+
 	}
 }
 
@@ -390,7 +424,7 @@ void Player::UpdateSensors()
 void Player::Draw()
 {
 	olc::Decal* decal;
-	if (hit)
+	if (hit || death)
 	{
 		decal = Assets::get().GetDecal("hurt");
 	}
@@ -446,16 +480,36 @@ void Player::Reset()
 	mCanShoot = true;
 	mBulletFrameCount = 0;
 
+	climbMove = false;
+	isClimbing = false;
+
 	hit = false;
 	tempInvicible = false;
 	mTempInvicibleFrameCount = 0;
 	mHitFrameCount = 0;
+
+	mGroundSpeed = 0.0f;
+	speed = { 0.0f, 0.0f };
 
 	mAlpha = 255;
 
 	health = 5;
 
 	SetAnimationState(AnimationState::IDLE);
+}
+
+void Player::Climb(olc::vf2d& ladderPos)
+{
+	if (direction == Direction::RIGHT)
+		position.x = ladderPos.x + 6.0f;
+	else
+		position.x = ladderPos.x + 10.0f;
+	speed = { 0.0f, 0.0f };
+	mGroundSpeed = 0.0f;
+	position.y -= 2.0f;
+	climbMove = true;
+	
+	UpdateSensors();
 }
 
 void Player::ResetSpeed()

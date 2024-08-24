@@ -21,8 +21,6 @@ public:
 
 struct HitBox
 {
-	float widthRad;
-	float heightRad;
 	olc::vf2d position;
 	olc::vf2d size;
 };
