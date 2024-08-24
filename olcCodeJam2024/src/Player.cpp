@@ -24,6 +24,8 @@ Player::Player()
 	mTempInvicibleFrameCount = 0;
 	mHitFrameCount = 0;
 
+	crouch = false;
+
 	mAlpha = 255;
 
 	health = 5;
@@ -87,7 +89,7 @@ void Player::Update()
 
 void Player::Shoot()
 {
-	if (!hit)
+	if (!hit || !death || !isClimbing)
 	{
 		if (game->GetMouse(0).bHeld && mCanShoot)
 		{
@@ -103,7 +105,7 @@ void Player::Shoot()
 					SetAnimationState(AnimationState::SHOOT);
 			}
 
-			listBullets.push_back(Bullet(olc::vf2d(position.x + 15.0f * (int32_t)direction, position.y - 13.0f)));
+			listBullets.push_back(Bullet(olc::vf2d(position.x + 15.0f * (int32_t)direction, position.y - ((crouch) ? -7.0f : 13.0f))));
 
 			mBulletFrameCount = 15;
 			mCanShoot = false;
@@ -137,6 +139,30 @@ void Player::Movement()
 	{
 		if (!hit)
 		{
+			if (mGroundSpeed == 0.0f)
+			{
+				if (!game->GetKey(olc::S).bHeld)
+				{
+					if (crouch)
+					{
+						hitbox.size.y += 20.0f;
+						if (mAnimState == AnimationState::CROUCH)
+							SetAnimationState(AnimationState::IDLE);
+						crouch = false;
+					}
+				}
+			
+				if (game->GetKey(olc::S).bHeld)
+				{
+					if (!crouch)
+					{
+						hitbox.size.y -= 20.0f;
+						SetAnimationState(AnimationState::CROUCH);
+						crouch = true;
+					}
+				}
+			}
+
 			if (!game->GetKey(olc::SPACE).bHeld)
 			{
 				mCanJump = true;
@@ -218,11 +244,16 @@ void Player::Movement()
 						}
 					}
 				}
+
 			}
 
 			speed.x = mGroundSpeed;
+			
+
+			
 		}
 
+		
 		speed.y += mGravityForce;
 		if (speed.y > 16.0f)
 			speed.y = 16.0f;
@@ -237,6 +268,7 @@ void Player::Movement()
 	}
 
 	UpdateSensors();
+	
 }
 
 void Player::FindSurface(AnchorPoint& point)
@@ -277,7 +309,7 @@ void Player::SetAnimationState(AnimationState state)
 
 void Player::HandleAnimation()
 {
-	if (mGroundSpeed == 0.0f && mAnimState != AnimationState::SHOOT && mAnimState != AnimationState::JUMP && mAnimState != AnimationState::CLIMB)
+	if (mGroundSpeed == 0.0f && mAnimState != AnimationState::SHOOT && mAnimState != AnimationState::JUMP && mAnimState != AnimationState::CLIMB && mAnimState != AnimationState::CROUCH)
 		SetAnimationState(AnimationState::IDLE);
 
 	switch (mAnimState)
@@ -383,6 +415,11 @@ void Player::HandleAnimation()
 			mAnimationName = "jump-shoot";
 			break;
 		}
+		case AnimationState::CROUCH:
+		{
+			mAnimationName = "crouch";
+			break;
+		}
 		case AnimationState::CLIMB:
 		{
 			mAnimationName = "climb";
@@ -418,7 +455,10 @@ void Player::UpdateSensors()
 	mPointA.position = { position.x - 10.0f, position.y + 33.0f };
 	mPointB.position = { position.x + 10.0f, position.y + 33.0f };
 
-	hitbox.position = { mPointA.position.x, position.y - 20.0f };
+	if (crouch)
+		hitbox.position = { mPointA.position.x, position.y };
+	else
+		hitbox.position = { mPointA.position.x, position.y - 20.0f };
 }
 
 void Player::Draw()
@@ -430,7 +470,7 @@ void Player::Draw()
 	}
 	else
 	{
-		if (mAnimState == AnimationState::SHOOT)
+		if (mAnimState == AnimationState::SHOOT || mAnimState == AnimationState::CROUCH)
 			decal = Assets::get().GetDecal(mAnimationName);
 		else if (mAnimState == AnimationState::JUMP_SHOOT)
 			decal = Assets::get().GetDecal("jump4");
@@ -460,13 +500,13 @@ void Player::Draw()
 		b.Draw();
 	}
 
-	//game->FillRectDecal(position - game->camera.offset, { 1, 1 }, olc::BLACK);
-	//game->FillRectDecal(olc::vf2d((position.x - 1), position.y) - game->camera.offset, { 1, 1 });
-	//game->FillRectDecal(olc::vf2d((position.x + 1), position.y) - game->camera.offset, { 1, 1 });
-	//game->FillRectDecal(olc::vf2d( position.x, position.y - 1 ) - game->camera.offset, { 1, 1 });
-	//game->FillRectDecal(olc::vf2d( position.x, position.y + 1 ) - game->camera.offset, { 1, 1 });
-	//
-	//DrawHitbox();
+	game->FillRectDecal(position - game->camera.offset, { 1, 1 }, olc::BLACK);
+	game->FillRectDecal(olc::vf2d((position.x - 1), position.y) - game->camera.offset, { 1, 1 });
+	game->FillRectDecal(olc::vf2d((position.x + 1), position.y) - game->camera.offset, { 1, 1 });
+	game->FillRectDecal(olc::vf2d( position.x, position.y - 1 ) - game->camera.offset, { 1, 1 });
+	game->FillRectDecal(olc::vf2d( position.x, position.y + 1 ) - game->camera.offset, { 1, 1 });
+	
+	DrawHitbox();
 }
 
 void Player::Reset()

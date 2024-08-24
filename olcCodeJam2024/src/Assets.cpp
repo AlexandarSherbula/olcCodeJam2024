@@ -70,6 +70,8 @@ void Assets::LoadSprites()
 
 	load("shoot",               "assets/sprites/player/shoot/shoot.png");
 
+	load("crouch",               "assets/sprites/player/crouch/crouch.png");
+
 	load("run-shoot1",          "assets/sprites/player/run-shoot/run-shoot-1.png");
 	load("run-shoot2",          "assets/sprites/player/run-shoot/run-shoot-2.png");
 	load("run-shoot3",          "assets/sprites/player/run-shoot/run-shoot-3.png");

@@ -63,6 +63,8 @@ public:
 	
 	bool climbMove;
 	bool isClimbing;
+
+	bool crouch;
 public:
 	Player();
 	~Player();
