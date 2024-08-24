@@ -57,7 +57,7 @@ void GoalVehicle::Draw()
 	if (mPlaceVictoryText)
 	{
 		std::string text = "VICTORY!!";
-
+		game->FillRectDecal(olc::vf2d(game->ScreenWidth() / 2.0f - (text.size() / 2.0f) * 16.0f - 5.0f, game->ScreenHeight() / 2.0f - 13.0f), { text.size() * 16.0f + 10.0f, 26.0f }, olc::DARK_CYAN);
 		game->DrawStringDecal({ game->ScreenWidth() / 2.0f - (text.size() / 2.0f) * 16.0f, game->ScreenHeight() / 2.0f - 8.0f }, text, olc::WHITE, { 2.0f, 2.0f });
 	}
 }

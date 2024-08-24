@@ -22,7 +22,7 @@ Game::~Game()
 bool Game::OnUserCreate()
 {
 	Assets::get().LoadSprites();
-	song1 = ma.LoadSound("assets/sfx/The Toadz - Street Chase - Loop.mp3");
+	
 
 	camera.Create();
 
@@ -34,7 +34,9 @@ bool Game::OnUserCreate()
 }
 
 bool Game::OnUserUpdate(float fElapsedTime)
-{	
+{
+	ma.Play("assets/sfx/The Toadz - Street Chase - Loop.mp3", true);
+
 	timer += fElapsedTime;
 	if (!victory)
 		countdownToCops -= fElapsedTime;
@@ -98,12 +100,16 @@ bool Game::OnUserUpdate(float fElapsedTime)
 
 void Game::OnFixedUpdate()
 {
-	if (!player.death || !victory)
+	if (!player.death)
 	{
-		player.Update();
+		if (!victory)
+			player.Update();
 
 		for (auto& drone : map.listDrones)
 			drone.Update();
+
+		for (auto& turret : map.listTurrets)
+			turret.Update();
 
 		camera.Update();
 
@@ -124,6 +130,48 @@ void Game::OnFixedUpdate()
 				continue;
 
 			if (CheckCollision(player.hitbox, drone.hitbox) && !player.tempInvicible)
+			{
+				player.ResetSpeed();
+				if (!player.hit)
+				{
+					player.health--;
+					player.hit = true;
+				}
+			}
+		}
+
+		for (auto& turret : map.listTurrets)
+		{
+			for (auto& b : player.listBullets)
+			{
+				if (CheckCollision(b.hitbox, turret.hitbox))
+				{
+					turret.destroyed = true;
+					b.remove = true;
+				}
+
+				if (turret.destroyed)
+					break;
+			}
+
+			for (auto& b : turret.listBullets)
+			{
+				if (CheckCollision(b.hitbox, player.hitbox) && !player.tempInvicible)
+				{
+					player.ResetSpeed();
+					if (!player.hit)
+					{
+						player.health--;
+						player.hit = true;
+					}
+					b.remove = true;
+				}
+			}
+
+			if (turret.destroyed)
+				continue;
+
+			if (CheckCollision(player.hitbox, turret.hitbox) && !player.tempInvicible)
 			{
 				player.ResetSpeed();
 				if (!player.hit)
@@ -164,7 +212,7 @@ void Game::OnFixedUpdate()
 			player.death = true;
 		}
 	}
-	else
+	else if (player.death)
 	{
 		countdownToReset--;
 		if (countdownToReset == 0)

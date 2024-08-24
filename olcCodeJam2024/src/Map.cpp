@@ -52,6 +52,17 @@ void Map::Load(const std::string& imageFilePath, const std::string& jsonFilePath
 		listDrones.push_back(Drone(dronePosition));
 	}
 
+	for (int32_t i = 0; i < mJson["layers"][2]["objects"].size(); i++)
+	{
+		olc::vf2d turretPosition =
+		{
+			mJson["layers"][2]["objects"][i]["x"],
+			mJson["layers"][2]["objects"][i]["y"]
+		};
+
+		listTurrets.push_back(Turret(turretPosition));
+	}
+
 	goalVehicle = GoalVehicle({ mJson["layers"][3]["objects"][0]["x"], mJson["layers"][3]["objects"][0]["y"] });
 
 	for (int i = 4; i < 6; i++)
@@ -88,6 +99,7 @@ void Map::Load(const std::string& imageFilePath, const std::string& jsonFilePath
 void Map::Update()
 {
 	listDrones.remove_if([&](const Drone& drone) {return drone.remove; });
+	listTurrets.remove_if([&](const Turret& turret) {return turret.remove; });
 }
 
 int32_t Map::GetTileID(olc::vi2d unitPos)
@@ -164,6 +176,9 @@ void Map::Draw()
 	for (auto& drone : listDrones)
 		drone.Draw();
 
+	for (auto& turret : listTurrets)
+		turret.Draw();
+
 	goalVehicle.Draw();
 }
 
@@ -187,5 +202,19 @@ void Map::Reset()
 		};
 
 		listDrones.push_back(Drone(dronePosition));
+	}
+
+	if (!listTurrets.empty())
+		listTurrets.clear();
+
+	for (int32_t i = 0; i < mJson["layers"][2]["objects"].size(); i++)
+	{
+		olc::vf2d turretPosition =
+		{
+			mJson["layers"][2]["objects"][i]["x"],
+			mJson["layers"][2]["objects"][i]["y"]
+		};
+
+		listTurrets.push_back(Turret(turretPosition));
 	}
 }

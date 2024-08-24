@@ -1,6 +1,8 @@
 #pragma once
 
 #include "olcPixelGameEngine.h"
+#include "olcPGEX_MiniAudio.h"
+
 #include "Map.h"
 #include "Camera.h"
 
@@ -8,8 +10,6 @@
 #include "Drone.h"
 #include "Bullet.h"
 #include "Ladder.h"
-
-#include "olcPGEX_MiniAudio.h"
 
 #ifdef _DEBUG
 #define PRINT(x) std::cout << x
@@ -45,7 +45,7 @@ public:
 	olc::Pixel timerTextColor;
 
 	olc::MiniAudio ma;
-	int32_t song1;
+	int32_t song;
 	
 	int32_t countdownToReset;
 

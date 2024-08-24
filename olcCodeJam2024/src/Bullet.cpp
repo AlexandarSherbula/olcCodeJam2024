@@ -6,11 +6,11 @@ Bullet::Bullet()
 {
 }
 
-Bullet::Bullet(const olc::vf2d& position, const olc::Pixel& colorTint)
+Bullet::Bullet(const olc::vf2d& position, const olc::Pixel& colorTint, Direction direction)
 {
 	this->position = position;
+	this->direction = direction;
 	mColorTint = colorTint;
-	direction = game->player.direction;
 	mFirstImage = 1;
 	mLastImage = 3;
 	mMaxFrameCount = 5;

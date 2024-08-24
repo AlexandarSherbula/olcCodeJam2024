@@ -4,6 +4,7 @@
 #include "../../dependencies/nlohmann/json/json.hpp"
 
 #include "Drone.h"
+#include "Turret.h"
 #include "Ladder.h"
 #include "GoalVehicle.h"
 
@@ -25,6 +26,7 @@ private:
 public:
 	olc::vi2d size;
 	std::list<Drone> listDrones;
+	std::list<Turret> listTurrets;
 	std::vector<Ladder> vecLadders;
 	GoalVehicle goalVehicle;
 
@@ -37,5 +39,4 @@ private:
 	int32_t mUnitHeight;
 
 	std::array<float, 11> spriteWidths;
-
 };

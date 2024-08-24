@@ -30,7 +30,6 @@ Player::Player()
 
 	health = 5;
 
-
 	SetAnimationState(AnimationState::IDLE);
 }
 
@@ -105,7 +104,7 @@ void Player::Shoot()
 					SetAnimationState(AnimationState::SHOOT);
 			}
 
-			listBullets.push_back(Bullet(olc::vf2d(position.x + 15.0f * (int32_t)direction, position.y - ((crouch) ? -7.0f : 13.0f))));
+			listBullets.push_back(Bullet(olc::vf2d(position.x + 15.0f * (int32_t)direction, position.y - ((crouch) ? -7.0f : 13.0f)), olc::GREEN, direction));
 
 			mBulletFrameCount = 15;
 			mCanShoot = false;

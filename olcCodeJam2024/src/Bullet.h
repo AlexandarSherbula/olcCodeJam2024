@@ -7,7 +7,7 @@ class Bullet : public AnimatedObject
 {
 public:
 	Bullet();
-	Bullet(const olc::vf2d& position, const olc::Pixel& colorTint = olc::WHITE);
+	Bullet(const olc::vf2d& position, const olc::Pixel& colorTint = olc::WHITE, Direction direction = Direction::LEFT);
 
 	void Travel();
 	void HandleAnimation() override;

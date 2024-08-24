@@ -98,6 +98,8 @@ void Assets::LoadSprites()
 
 	load("v-red",               "assets/sprites/vehicles/v-red.png");
 
+	load("turret",               "assets/sprites/misc/turret/turret-1.png");
+
 	load("shot1",               "assets/sprites/misc/shot/shot-1.png");
 	load("shot2",               "assets/sprites/misc/shot/shot-2.png");
 	load("shot3",               "assets/sprites/misc/shot/shot-3.png");

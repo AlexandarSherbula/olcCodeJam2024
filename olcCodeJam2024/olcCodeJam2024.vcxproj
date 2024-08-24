@@ -160,6 +160,7 @@
     <ClInclude Include="src\olcPGEX_MiniAudio.h" />
     <ClInclude Include="src\olcPixelGameEngine.h" />
     <ClInclude Include="src\Player.h" />
+    <ClInclude Include="src\Turret.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Assets.cpp" />
@@ -174,6 +175,7 @@
     <ClCompile Include="src\Object.cpp" />
     <ClCompile Include="src\olcPixelGameEngine.cpp" />
     <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\Turret.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
