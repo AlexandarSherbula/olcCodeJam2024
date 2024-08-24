@@ -64,7 +64,7 @@
         {
          "draworder":"topdown",
          "id":2,
-         "name":"Enemy",
+         "name":"Drone",
          "objects":[
                 {
                  "gid":385,
@@ -101,6 +101,64 @@
                  "width":55,
                  "x":1252,
                  "y":391
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":false,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":9,
+         "name":"Turret",
+         "objects":[
+                {
+                 "gid":387,
+                 "height":23,
+                 "id":77,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":25,
+                 "x":1676,
+                 "y":432
+                }, 
+                {
+                 "gid":387,
+                 "height":23,
+                 "id":78,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":25,
+                 "x":2413,
+                 "y":256
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":8,
+         "name":"GoalVehicle",
+         "objects":[
+                {
+                 "gid":386,
+                 "height":61,
+                 "id":76,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":96,
+                 "x":3124,
+                 "y":176
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -442,8 +500,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":8,
- "nextobjectid":76,
+ "nextlayerid":10,
+ "nextobjectid":79,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
@@ -456,6 +514,14 @@
         {
          "firstgid":385,
          "source":"..\/..\/..\/..\/..\/Tiled\/Tilesets\/drone.tsx"
+        }, 
+        {
+         "firstgid":386,
+         "source":"..\/..\/..\/..\/..\/Tiled\/Tilesets\/v-red.tsx"
+        }, 
+        {
+         "firstgid":387,
+         "source":"..\/..\/..\/..\/..\/Tiled\/Tilesets\/turret-1.tsx"
         }],
  "tilewidth":16,
  "type":"map",

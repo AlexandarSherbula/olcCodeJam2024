@@ -48,6 +48,8 @@ public:
 	int32_t song1;
 	
 	int32_t countdownToReset;
+
+	bool victory;
 };
 
 inline Game* game;

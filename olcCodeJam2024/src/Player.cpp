@@ -248,12 +248,7 @@ void Player::Movement()
 			}
 
 			speed.x = mGroundSpeed;
-			
-
-			
 		}
-
-		
 		speed.y += mGravityForce;
 		if (speed.y > 16.0f)
 			speed.y = 16.0f;
@@ -268,7 +263,6 @@ void Player::Movement()
 	}
 
 	UpdateSensors();
-	
 }
 
 void Player::FindSurface(AnchorPoint& point)
@@ -500,13 +494,13 @@ void Player::Draw()
 		b.Draw();
 	}
 
-	game->FillRectDecal(position - game->camera.offset, { 1, 1 }, olc::BLACK);
-	game->FillRectDecal(olc::vf2d((position.x - 1), position.y) - game->camera.offset, { 1, 1 });
-	game->FillRectDecal(olc::vf2d((position.x + 1), position.y) - game->camera.offset, { 1, 1 });
-	game->FillRectDecal(olc::vf2d( position.x, position.y - 1 ) - game->camera.offset, { 1, 1 });
-	game->FillRectDecal(olc::vf2d( position.x, position.y + 1 ) - game->camera.offset, { 1, 1 });
-	
-	DrawHitbox();
+	//game->FillRectDecal(position - game->camera.offset, { 1, 1 }, olc::BLACK);
+	//game->FillRectDecal(olc::vf2d((position.x - 1), position.y) - game->camera.offset, { 1, 1 });
+	//game->FillRectDecal(olc::vf2d((position.x + 1), position.y) - game->camera.offset, { 1, 1 });
+	//game->FillRectDecal(olc::vf2d( position.x, position.y - 1 ) - game->camera.offset, { 1, 1 });
+	//game->FillRectDecal(olc::vf2d( position.x, position.y + 1 ) - game->camera.offset, { 1, 1 });
+	//
+	//DrawHitbox();
 }
 
 void Player::Reset()

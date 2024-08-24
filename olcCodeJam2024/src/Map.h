@@ -5,6 +5,7 @@
 
 #include "Drone.h"
 #include "Ladder.h"
+#include "GoalVehicle.h"
 
 #include <array>
 
@@ -25,6 +26,8 @@ public:
 	olc::vi2d size;
 	std::list<Drone> listDrones;
 	std::vector<Ladder> vecLadders;
+	GoalVehicle goalVehicle;
+
 private:
 	olc::Renderable mGFX;
 	nlohmann::json mJson;

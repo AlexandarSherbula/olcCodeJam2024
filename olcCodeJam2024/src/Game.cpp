@@ -28,13 +28,16 @@ bool Game::OnUserCreate()
 
 	map.Load("assets/sprites/map01.png", "assets/json/olcCodeJam2024_map.json");
 
+	victory = false;
+
 	return true;
 }
 
 bool Game::OnUserUpdate(float fElapsedTime)
 {	
 	timer += fElapsedTime;
-	countdownToCops -= fElapsedTime;
+	if (!victory)
+		countdownToCops -= fElapsedTime;
 
 	while (fixedTimeSimulated < timer)
 	{
@@ -54,18 +57,23 @@ bool Game::OnUserUpdate(float fElapsedTime)
 	{
 		if (countdownToReset <= 120)
 		{
-			std::string text = "YOU'VE RUN OUT OF LUCK!!!!";
+			std::string text = " ";
+			if (countdownToCops <= 0.0f)
+				text = "YOU'VE RUN OUT OF TIME!!!!";
+			else
+				text = "YOU'VE RUN OUT OF LUCK!!!!";
+
 			DrawStringDecal({ (ScreenWidth() / 2.0f) - (text.size() * 16.0f) / 2.0f, game->ScreenHeight() - 64.0f}, text, olc::WHITE, {2.0f, 2.0f});
 		}
 	}
 	
-	player.Draw();
+	if (!victory)
+		player.Draw();
 
 	if (!player.death)
 	{
 		FillRectDecal(olc::vf2d(8.0f, 8.0f), olc::vf2d(92.0f, 11.0f), olc::DARK_GREY);
 		FillRectDecal(olc::vf2d(9.0f, 9.0f), olc::vf2d(player.health * 18.0f, 9.0f), olc::GREEN);
-
 
 		int32_t minutes = countdownToCops / 60;
 		int32_t seconds = (int32_t)countdownToCops % 60;
@@ -74,9 +82,9 @@ bool Game::OnUserUpdate(float fElapsedTime)
 		std::string strSeconds = (seconds < 10) ? "0" + std::to_string(seconds) : std::to_string(seconds);
 
 		if (countdownToCops < 60.0f)
-		{
 			timerTextColor = olc::RED;
-		}
+		else
+			timerTextColor = olc::WHITE;
 
 		DrawStringDecal(olc::vf2d(8.0f, 32.0f), strMinutes + ":" + strSeconds, timerTextColor, { 2.0f, 2.0f });
 	}
@@ -90,7 +98,7 @@ bool Game::OnUserUpdate(float fElapsedTime)
 
 void Game::OnFixedUpdate()
 {
-	if (!player.death)
+	if (!player.death || !victory)
 	{
 		player.Update();
 
@@ -130,7 +138,7 @@ void Game::OnFixedUpdate()
 		{
 			if (CheckCollision(player.hitbox, ladder.hitbox))
 			{
-				if (GetKey(olc::W).bHeld)
+				if (GetKey(olc::W).bHeld && !player.crouch)
 				{
 					if (!player.isClimbing)
 					{
@@ -151,7 +159,7 @@ void Game::OnFixedUpdate()
 			}
 		}
 
-		if (player.position.y + 35.0f > map.size.y)
+		if ((player.position.y + 35.0f > map.size.y) || countdownToCops <= 0.0f)
 		{
 			player.death = true;
 		}
@@ -162,9 +170,11 @@ void Game::OnFixedUpdate()
 		if (countdownToReset == 0)
 		{
 			player.death = false;
-			game->Reset();
+			Reset();
 		}
 	}
+
+	map.goalVehicle.Update();
 }
 
 void Game::Reset()

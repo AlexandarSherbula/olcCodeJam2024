@@ -52,7 +52,9 @@ void Map::Load(const std::string& imageFilePath, const std::string& jsonFilePath
 		listDrones.push_back(Drone(dronePosition));
 	}
 
-	for (int i = 2; i < 4; i++)
+	goalVehicle = GoalVehicle({ mJson["layers"][3]["objects"][0]["x"], mJson["layers"][3]["objects"][0]["y"] });
+
+	for (int i = 4; i < 6; i++)
 	{
 		float ladderHeight = 0.0f;
 		float PosX = mJson["layers"][i]["objects"][0]["x"];
@@ -67,9 +69,6 @@ void Map::Load(const std::string& imageFilePath, const std::string& jsonFilePath
 
 		vecLadders.push_back(Ladder({ PosX, PosY }, ladderHeight));
 	}
-	
-
-	
 
 	spriteWidths[0] = 0.0f;
 	spriteWidths[1] = Assets::get().GetDecal("skyline-city")->sprite->width * 2.0f;
@@ -162,9 +161,10 @@ void Map::Draw()
 	
 	game->DrawDecal(-game->camera.offset, mGFX.Decal());
 
-
 	for (auto& drone : listDrones)
 		drone.Draw();
+
+	goalVehicle.Draw();
 }
 
 void Map::Reset()

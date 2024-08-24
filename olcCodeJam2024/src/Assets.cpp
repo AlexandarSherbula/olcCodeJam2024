@@ -95,6 +95,9 @@ void Assets::LoadSprites()
 	load("enemy-explosion5",    "assets/sprites/misc/enemy-explosion/enemy-explosion-5.png");
 	load("enemy-explosion6",    "assets/sprites/misc/enemy-explosion/enemy-explosion-6.png");
 
+
+	load("v-red",               "assets/sprites/vehicles/v-red.png");
+
 	load("shot1",               "assets/sprites/misc/shot/shot-1.png");
 	load("shot2",               "assets/sprites/misc/shot/shot-2.png");
 	load("shot3",               "assets/sprites/misc/shot/shot-3.png");
