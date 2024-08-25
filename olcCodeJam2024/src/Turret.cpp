@@ -27,7 +27,7 @@ Turret::Turret(const olc::vf2d& position, bool horizontalFlip)
 	destroyed = false;
 	remove = false;
 
-	countdownToFire = 0;
+	countdownToFire = 30;
 }
 
 void Turret::Update()
@@ -94,10 +94,6 @@ void Turret::Draw()
 	}
 
 	game->DrawDecal(drawingPosition - game->camera.offset, decal, { 1.0f, 1.0f });
-
-	game->FillRectDecal(hitbox.position - game->camera.offset, hitbox.size, olc::Pixel(255, 0, 255, 125));
-
-	game->FillRectDecal(fireHitbox.position - game->camera.offset, fireHitbox.size, olc::Pixel(255, 0, 0, 125));
 
 	for (Bullet& b : listBullets)
 	{

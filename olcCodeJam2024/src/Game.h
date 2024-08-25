@@ -61,6 +61,7 @@ public:
 	int32_t enemyShootSound;
 	int32_t explosionSound;
 	int32_t hurtSound;
+	int32_t engineSound;
 	
 	int32_t countdownToReset;
 

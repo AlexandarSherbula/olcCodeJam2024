@@ -31,9 +31,11 @@ bool Game::OnUserCreate()
 	enemyShootSound = ma.LoadSound("assets/sfx/sounds/enemy-shoot.mp3");
 	explosionSound  = ma.LoadSound("assets/sfx/sounds/explosion.mp3");
 	hurtSound       = ma.LoadSound("assets/sfx/sounds/hurt.mp3");
+	engineSound     = ma.LoadSound("assets/sfx/sounds/spaceEngine_001.mp3");
 
 	ma.SetVolume(levelMusic, 1.0f);
 	ma.SetVolume(hurtSound, 2.0f);
+	ma.SetVolume(engineSound, 2.0f);
 
 	camera.Create();
 
@@ -71,8 +73,8 @@ bool Game::OnUserUpdate(float fElapsedTime)
 		{
 			gameState = GAME;
 
-			//ma.Stop(introMusic);
-			//ma.Play(levelMusic, true);
+			ma.Stop(introMusic);
+			ma.Play(levelMusic, true);
 		}
 
 		Clear(olc::BLACK);
@@ -298,6 +300,6 @@ void Game::Reset()
 	fixedTimeSimulated = 0.0f;
 	countdownToDeath = 300.0f;
 
-	map.Reset();
 	player.Reset();
+	map.Reset();
 }

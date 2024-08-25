@@ -82,7 +82,7 @@ void Map::Load(const std::string& imageFilePath, const std::string& jsonFilePath
 
 	goalVehicle = GoalVehicle({ mJson["layers"][4]["objects"][0]["x"], mJson["layers"][4]["objects"][0]["y"] });
 
-	for (int i = 5; i < 7; i++)
+	for (int i = 5; i < 8; i++)
 	{
 		float ladderHeight = 0.0f;
 		float PosX = mJson["layers"][i]["objects"][0]["x"];
@@ -186,9 +186,9 @@ void Map::Draw()
 	WrapBackgroundImage(spriteWidths[9],  spriteWidth,  -game->camera.offset.x / 12.0f, 2);
 	WrapBackgroundImage(spriteWidths[10], spriteWidth,  -game->camera.offset.x / 12.0f, 2);
 	
-	game->DrawDecal(olc::vf2d(spriteWidths[8]  - game->camera.offset.x / 12.0f, 180.0f - game->camera.offset.y / 24.0f), Assets::get().GetDecal("near-buildings-bg"));
-	game->DrawDecal(olc::vf2d(spriteWidths[9]  - game->camera.offset.x / 12.0f, 180.0f - game->camera.offset.y / 24.0f), Assets::get().GetDecal("near-buildings-bg"));
-	game->DrawDecal(olc::vf2d(spriteWidths[10] - game->camera.offset.x / 12.0f, 180.0f - game->camera.offset.y / 24.0f), Assets::get().GetDecal("near-buildings-bg"));
+	game->DrawDecal(olc::vf2d(spriteWidths[8]  - game->camera.offset.x / 12.0f, 200.0f - game->camera.offset.y / 24.0f), Assets::get().GetDecal("near-buildings-bg"));
+	game->DrawDecal(olc::vf2d(spriteWidths[9]  - game->camera.offset.x / 12.0f, 200.0f - game->camera.offset.y / 24.0f), Assets::get().GetDecal("near-buildings-bg"));
+	game->DrawDecal(olc::vf2d(spriteWidths[10] - game->camera.offset.x / 12.0f, 200.0f - game->camera.offset.y / 24.0f), Assets::get().GetDecal("near-buildings-bg"));
 	
 	game->DrawDecal(-game->camera.offset, mGFX.Decal());
 

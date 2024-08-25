@@ -4,7 +4,7 @@
 
 Player::Player()
 {
-	position = { 72.0f, 559.0f };
+	position = { 72.0f, 1343.0f };
 	mAcceleration = 0.046875f;
 	mDeceleration = 0.5f;
 	mGravityForce = 0.21875f;
@@ -103,7 +103,7 @@ void Player::Shoot()
 				else if (mAnimState == AnimationState::IDLE)
 					SetAnimationState(AnimationState::SHOOT);
 			}
-			//game->ma.Play(game->shootSound);
+			game->ma.Play(game->shootSound);
 			listBullets.push_back(Bullet(olc::vf2d(position.x + 15.0f * (int32_t)direction, position.y - ((crouch) ? -7.0f : 13.0f)), olc::GREEN, direction));
 
 			mBulletFrameCount = 15;
@@ -505,7 +505,7 @@ void Player::Draw()
 void Player::Reset()
 {
 	position.x = 72.0f;
-	position.y = 559.0f;
+	position.y = 1343.0f;
 	UpdateSensors();
 
 	direction = Direction::RIGHT;
@@ -528,6 +528,7 @@ void Player::Reset()
 
 	health = 5;
 
+	mAnimationName = "idle";
 	SetAnimationState(AnimationState::IDLE);
 }
 
@@ -556,7 +557,7 @@ void Player::Hurt()
 	ResetSpeed();
 	if (!hit)
 	{
-		//game->ma.Play(game->hurtSound);
+		game->ma.Play(game->hurtSound);
 		health--;
 		hit = true;
 	}

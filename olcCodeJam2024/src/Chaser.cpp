@@ -39,7 +39,9 @@ void Chaser::Update()
 	}
 
 	if (drive)
+	{		
 		speed.x += 0.046875f * (float)direction;
+	}
 	
 	position.x += speed.x;
 	hitbox.position.x += speed.x;
@@ -50,8 +52,4 @@ void Chaser::Draw()
 	olc::Decal* decal = Assets::get().GetDecal("v-yellow");
 
 	game->DrawDecal(position - game->camera.offset, decal, { -(float)direction /*No idea why this has to be reverse*/, 1.0f});
-
-	game->FillRectDecal(hitbox.position - game->camera.offset, hitbox.size, olc::Pixel(255, 0, 255, 125));
-
-	game->FillRectDecal(trigger.position - game->camera.offset, trigger.size, olc::Pixel(255, 0, 0, 125));
 }
