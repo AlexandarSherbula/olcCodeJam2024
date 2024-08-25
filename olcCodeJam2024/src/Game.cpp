@@ -22,20 +22,35 @@ Game::~Game()
 bool Game::OnUserCreate()
 {
 	Assets::get().LoadSprites();
-	
+
+	introMusic      = ma.LoadSound("assets/sfx/music/The Toadz - Sci-Fi Chronicles 19 - Loop.mp3");
+	levelMusic      = ma.LoadSound("assets/sfx/music/The Toadz - Street Chase - Loop.mp3");
+	shootSound      = ma.LoadSound("assets/sfx/sounds/beam.mp3");
+	enemyShootSound = ma.LoadSound("assets/sfx/sounds/enemy-shoot.mp3");
+	explosionSound  = ma.LoadSound("assets/sfx/sounds/explosion.mp3");
+	hurtSound       = ma.LoadSound("assets/sfx/sounds/hurt.mp3");
+
+	ma.SetVolume(levelMusic, 1.0f);
+	ma.SetVolume(hurtSound, 2.0f);
 
 	camera.Create();
 
 	map.Load("assets/sprites/map01.png", "assets/json/olcCodeJam2024_map.json");
 
 	victory = false;
+	
+	ma.Play(levelMusic, true);
 
 	return true;
 }
 
 bool Game::OnUserUpdate(float fElapsedTime)
 {
-	ma.Play("assets/sfx/The Toadz - Street Chase - Loop.mp3", true);
+	//if (GetKey(olc::P).bPressed)
+	//{
+	//	ma.Stop(music2);
+	//	ma.Play(music, true);
+	//}
 
 	timer += fElapsedTime;
 	if (!victory)
@@ -90,6 +105,8 @@ bool Game::OnUserUpdate(float fElapsedTime)
 
 		DrawStringDecal(olc::vf2d(8.0f, 32.0f), strMinutes + ":" + strSeconds, timerTextColor, { 2.0f, 2.0f });
 	}
+	else
+		ma.Stop(levelMusic);
 
 #if _DEBUG
 	return !GetKey(olc::ESCAPE).bPressed;
@@ -121,6 +138,7 @@ void Game::OnFixedUpdate()
 				{
 					drone.destroyed = true;
 					b.remove = true;
+					ma.Play(explosionSound);
 				}
 
 				if (drone.destroyed)
@@ -131,12 +149,7 @@ void Game::OnFixedUpdate()
 
 			if (CheckCollision(player.hitbox, drone.hitbox) && !player.tempInvicible)
 			{
-				player.ResetSpeed();
-				if (!player.hit)
-				{
-					player.health--;
-					player.hit = true;
-				}
+				player.Hurt();
 			}
 		}
 
@@ -148,6 +161,7 @@ void Game::OnFixedUpdate()
 				{
 					turret.destroyed = true;
 					b.remove = true;
+					ma.Play(explosionSound);
 				}
 
 				if (turret.destroyed)
@@ -158,12 +172,7 @@ void Game::OnFixedUpdate()
 			{
 				if (CheckCollision(b.hitbox, player.hitbox) && !player.tempInvicible)
 				{
-					player.ResetSpeed();
-					if (!player.hit)
-					{
-						player.health--;
-						player.hit = true;
-					}
+					player.Hurt();
 					b.remove = true;
 				}
 			}
@@ -173,12 +182,7 @@ void Game::OnFixedUpdate()
 
 			if (CheckCollision(player.hitbox, turret.hitbox) && !player.tempInvicible)
 			{
-				player.ResetSpeed();
-				if (!player.hit)
-				{
-					player.health--;
-					player.hit = true;
-				}
+				player.Hurt();
 			}
 		}
 
@@ -227,6 +231,7 @@ void Game::OnFixedUpdate()
 
 void Game::Reset()
 {
+	ma.Play(levelMusic, true);
 	countdownToReset = 180;
 	timer = 0.0f;
 	fixedTimeSimulated = 0.0f;

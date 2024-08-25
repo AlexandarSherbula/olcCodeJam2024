@@ -45,7 +45,12 @@ public:
 	olc::Pixel timerTextColor;
 
 	olc::MiniAudio ma;
-	int32_t song;
+	int32_t introMusic;
+	int32_t levelMusic;
+	int32_t shootSound;
+	int32_t enemyShootSound;
+	int32_t explosionSound;
+	int32_t hurtSound;
 	
 	int32_t countdownToReset;
 

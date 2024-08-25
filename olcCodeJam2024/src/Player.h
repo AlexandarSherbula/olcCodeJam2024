@@ -81,6 +81,8 @@ public:
 	void Climb(olc::vf2d& ladderPos);
 
 	void ResetSpeed();
+
+	void Hurt();
 private:
 	void UpdateSensors();
 	void FindSurface(AnchorPoint& point);

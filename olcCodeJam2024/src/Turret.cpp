@@ -38,14 +38,13 @@ void Turret::Update()
 		{
 			if (countdownToFire == 60)
 			{
+				game->ma.Play(game->enemyShootSound);
 				listBullets.push_back(Bullet(olc::vf2d(position.x - 15.0f, position.y)));
 				countdownToFire = 0;
 			}
 			else
 				countdownToFire++;
 		}
-		else
-			countdownToFire = 0;
 	}
 
 	for (Bullet& b : listBullets)
