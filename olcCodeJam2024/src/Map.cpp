@@ -49,7 +49,9 @@ void Map::Load(const std::string& imageFilePath, const std::string& jsonFilePath
 			mJson["layers"][1]["objects"][i]["y"]
 		};
 
-		listDrones.push_back(Drone(dronePosition));
+		bool vertical = mJson["layers"][1]["objects"][i]["properties"][0]["value"];
+
+		listDrones.push_back(Drone(dronePosition, vertical));
 	}
 
 	for (int32_t i = 0; i < mJson["layers"][2]["objects"].size(); i++)
@@ -60,16 +62,32 @@ void Map::Load(const std::string& imageFilePath, const std::string& jsonFilePath
 			mJson["layers"][2]["objects"][i]["y"]
 		};
 
-		listTurrets.push_back(Turret(turretPosition));
+		bool flipped = mJson["layers"][2]["objects"][i]["properties"][0]["value"];
+
+		listTurrets.push_back(Turret(turretPosition, flipped));
 	}
 
-	goalVehicle = GoalVehicle({ mJson["layers"][3]["objects"][0]["x"], mJson["layers"][3]["objects"][0]["y"] });
+	for (int32_t i = 0; i < mJson["layers"][3]["objects"].size(); i++)
+	{
+		olc::vf2d chaserPosition =
+		{
+			mJson["layers"][3]["objects"][i]["x"],
+			mJson["layers"][3]["objects"][i]["y"]
+		};
 
-	for (int i = 4; i < 6; i++)
+		bool flipped = mJson["layers"][3]["objects"][i]["properties"][0]["value"];
+
+		listChasers.push_back(Chaser(chaserPosition, flipped));
+	}
+
+	goalVehicle = GoalVehicle({ mJson["layers"][4]["objects"][0]["x"], mJson["layers"][4]["objects"][0]["y"] });
+
+	for (int i = 5; i < 7; i++)
 	{
 		float ladderHeight = 0.0f;
 		float PosX = mJson["layers"][i]["objects"][0]["x"];
-		float PosY = mJson["layers"][i]["objects"][0]["y"] - 16.0f;
+		float jsonPosY = mJson["layers"][i]["objects"][0]["y"];
+		float PosY = jsonPosY - 16.0f;
 		for (int32_t j = 0; j < mJson["layers"][i]["objects"].size(); j++)
 		{
 			int32_t PosX = mJson["layers"][i]["objects"][j]["x"];
@@ -91,8 +109,8 @@ void Map::Load(const std::string& imageFilePath, const std::string& jsonFilePath
 	spriteWidths[6] = Assets::get().GetDecal("buildings-bg")->sprite->width * 4.0f;
 	spriteWidths[7] = Assets::get().GetDecal("buildings-bg")->sprite->width * 6.0f;
 
-	spriteWidths[8] = 0.0f;
-	spriteWidths[9] = Assets::get().GetDecal("near-buildings-bg")->sprite->width;
+	spriteWidths[8] =  0.0f;
+	spriteWidths[9] =  Assets::get().GetDecal("near-buildings-bg")->sprite->width;
 	spriteWidths[10] = Assets::get().GetDecal("near-buildings-bg")->sprite->width * 2.0f;
 }
 
@@ -100,6 +118,7 @@ void Map::Update()
 {
 	listDrones.remove_if([&](const Drone& drone) {return drone.remove; });
 	listTurrets.remove_if([&](const Turret& turret) {return turret.remove; });
+	listChasers.remove_if([&](const Chaser& chaser) {return chaser.drive && (chaser.position.x > game->ScreenWidth() + game->camera.offset.x + chaser.hitbox.size.x || chaser.position.x < game->camera.offset.x - chaser.hitbox.size.x); });
 }
 
 int32_t Map::GetTileID(olc::vi2d unitPos)
@@ -179,6 +198,9 @@ void Map::Draw()
 	for (auto& turret : listTurrets)
 		turret.Draw();
 
+	for (auto& chaser : listChasers)
+		chaser.Draw();
+
 	goalVehicle.Draw();
 }
 
@@ -201,7 +223,9 @@ void Map::Reset()
 			mJson["layers"][1]["objects"][i]["y"]
 		};
 
-		listDrones.push_back(Drone(dronePosition));
+		bool vertical = mJson["layers"][1]["objects"][i]["properties"][0]["value"];
+
+		listDrones.push_back(Drone(dronePosition, vertical));
 	}
 
 	if (!listTurrets.empty())
@@ -215,6 +239,24 @@ void Map::Reset()
 			mJson["layers"][2]["objects"][i]["y"]
 		};
 
-		listTurrets.push_back(Turret(turretPosition));
+		bool flipped = mJson["layers"][2]["objects"][i]["properties"][0]["value"];
+
+		listTurrets.push_back(Turret(turretPosition, flipped));
+	}
+
+	if (!listChasers.empty())
+		listChasers.clear();
+
+	for (int32_t i = 0; i < mJson["layers"][3]["objects"].size(); i++)
+	{
+		olc::vf2d chaserPosition =
+		{
+			mJson["layers"][3]["objects"][i]["x"],
+			mJson["layers"][3]["objects"][i]["y"]
+		};
+
+		bool flipped = mJson["layers"][3]["objects"][i]["properties"][0]["value"];
+
+		listChasers.push_back(Chaser(chaserPosition, flipped));
 	}
 }

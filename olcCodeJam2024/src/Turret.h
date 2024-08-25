@@ -8,7 +8,7 @@ class Turret : public AnimatedObject
 {
 public:
 	Turret();
-	Turret(const olc::vf2d& position);
+	Turret(const olc::vf2d& position, bool horizontalFlip = false);
 
 	void Update() override;
 
@@ -23,4 +23,6 @@ public:
 	HitBox fireHitbox;
 
 	int32_t countdownToFire;
+private:
+	bool mHorizontalFlip;
 };

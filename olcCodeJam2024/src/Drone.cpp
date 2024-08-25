@@ -6,16 +6,22 @@ Drone::Drone()
 {
 }
 
-Drone::Drone(const olc::vf2d& position)
+Drone::Drone(const olc::vf2d& position, bool vertical)
 {
 	this->position = position;
 
 	hitbox.size = { (float)Assets::get().GetDecal("drone1")->sprite->width - 20.0f, (float)Assets::get().GetDecal("drone1")->sprite->height };
 
-	direction = Direction::RIGHT;
+	mVertical = vertical;
+
+	if (vertical)
+		this->position.x = position.x + hitbox.size.x;
+	
+	direction = (vertical) ? Direction::LEFT : Direction::RIGHT;
 	mRotateAnimation = false;
 	destroyed = false;
 	remove = false;
+
 
 	mAnimationName = "drone";
 }
@@ -24,11 +30,20 @@ void Drone::Update()
 {
 	if (!destroyed)
 	{
-		mSpeed.x = 2 * std::cosf(game->timer);
-		position.x += mSpeed.x;
+		if (mVertical)
+		{
+			mSpeed.y = 2 * std::cosf(game->timer);
+			position.y += mSpeed.y;
+		}
+		else
+		{
+			mSpeed.x = 2 * std::cosf(game->timer);
+			position.x += mSpeed.x;
+		}
+		
 	}
 
-	if (std::abs(mSpeed.x) < 0.05f)
+	if (std::abs(mSpeed.x) < 0.05f && !mVertical)
 		mRotateAnimation = true;
 
 	if (mRotateAnimation || destroyed)
@@ -101,7 +116,7 @@ void Drone::Draw()
 	//game->FillRectDecal(olc::vf2d((position.x + 1), position.y) - game->camera.offset, { 1, 1 });
 	//game->FillRectDecal(olc::vf2d(position.x, position.y - 1) - game->camera.offset, { 1, 1 });
 	//game->FillRectDecal(olc::vf2d(position.x, position.y + 1) - game->camera.offset, { 1, 1 });
-
+	//
 	//game->FillRectDecal(hitbox.position - game->camera.offset, hitbox.size, olc::Pixel(255, 0, 255, 125));
 
 }

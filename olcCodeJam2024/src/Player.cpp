@@ -103,7 +103,7 @@ void Player::Shoot()
 				else if (mAnimState == AnimationState::IDLE)
 					SetAnimationState(AnimationState::SHOOT);
 			}
-			game->ma.Play(game->shootSound);
+			//game->ma.Play(game->shootSound);
 			listBullets.push_back(Bullet(olc::vf2d(position.x + 15.0f * (int32_t)direction, position.y - ((crouch) ? -7.0f : 13.0f)), olc::GREEN, direction));
 
 			mBulletFrameCount = 15;
@@ -556,7 +556,7 @@ void Player::Hurt()
 	ResetSpeed();
 	if (!hit)
 	{
-		game->ma.Play(game->hurtSound);
+		//game->ma.Play(game->hurtSound);
 		health--;
 		hit = true;
 	}

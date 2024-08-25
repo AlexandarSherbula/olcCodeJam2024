@@ -37,7 +37,7 @@ bool Game::OnUserCreate()
 
 	camera.Create();
 
-	map.Load("assets/sprites/map01.png", "assets/json/olcCodeJam2024_map.json");
+	map.Load("assets/sprites/olcCodeJam2024_map.png", "assets/json/olcCodeJam2024_map.json");
 
 	victory = false;
 	pause = false;
@@ -71,8 +71,8 @@ bool Game::OnUserUpdate(float fElapsedTime)
 		{
 			gameState = GAME;
 
-			ma.Stop(introMusic);
-			ma.Play(levelMusic, true);
+			//ma.Stop(introMusic);
+			//ma.Play(levelMusic, true);
 		}
 
 		Clear(olc::BLACK);
@@ -271,6 +271,9 @@ void Game::OnFixedUpdate()
 
 		for (auto& turret : map.listTurrets)
 			turret.Update();
+
+		for (auto& chaser : map.listChasers)
+			chaser.Update();
 
 		camera.Update();
 	}

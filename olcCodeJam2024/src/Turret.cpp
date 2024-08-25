@@ -6,8 +6,10 @@ Turret::Turret()
 {
 }
 
-Turret::Turret(const olc::vf2d& position)
+Turret::Turret(const olc::vf2d& position, bool horizontalFlip)
 {
+	mHorizontalFlip = horizontalFlip;
+
 	this->position.x = position.x;
 	this->position.y = position.y - Assets::get().GetDecal("turret")->sprite->height;
 
@@ -18,8 +20,8 @@ Turret::Turret(const olc::vf2d& position)
 
 	fireHitbox.size.x = 200.0f;
 	fireHitbox.size.y = Assets::get().GetDecal("turret")->sprite->height;
-
-	fireHitbox.position.x = this->position.x - fireHitbox.size.x;
+	
+	fireHitbox.position.x = (mHorizontalFlip) ? this->position.x + hitbox.size.x : this->position.x - fireHitbox.size.x;
 	fireHitbox.position.y = this->position.y;
 
 	destroyed = false;
@@ -39,7 +41,7 @@ void Turret::Update()
 			if (countdownToFire == 60)
 			{
 				game->ma.Play(game->enemyShootSound);
-				listBullets.push_back(Bullet(olc::vf2d(position.x - 15.0f, position.y)));
+				listBullets.push_back(Bullet(olc::vf2d(position.x - 15.0f, position.y), olc::WHITE, (mHorizontalFlip) ? Direction::RIGHT : Direction::LEFT));
 				countdownToFire = 0;
 			}
 			else
@@ -81,6 +83,8 @@ void Turret::HandleAnimation()
 void Turret::Draw()
 {
 	olc::Decal* decal = Assets::get().GetDecal("turret");
+	if (mHorizontalFlip)
+		decal = Assets::get().GetDecal("turretF");
 	olc::vf2d drawingPosition = position;
 	if (destroyed)
 	{
@@ -93,7 +97,7 @@ void Turret::Draw()
 
 	game->FillRectDecal(hitbox.position - game->camera.offset, hitbox.size, olc::Pixel(255, 0, 255, 125));
 
-	//game->FillRectDecal(fireHitbox.position - game->camera.offset, fireHitbox.size, olc::Pixel(255, 0, 0, 125));
+	game->FillRectDecal(fireHitbox.position - game->camera.offset, fireHitbox.size, olc::Pixel(255, 0, 0, 125));
 
 	for (Bullet& b : listBullets)
 	{
