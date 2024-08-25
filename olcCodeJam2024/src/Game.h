@@ -20,6 +20,13 @@
 #endif // _DEBUG
 
 
+enum GameState
+{
+	TITLE,
+	GAME
+};
+
+
 class Game : public olc::PixelGameEngine
 {
 public:
@@ -34,6 +41,9 @@ public:
 	void Reset();
 
 public:
+	GameState gameState;
+	bool pause;
+
 	Player player;
 
 	Map map;
@@ -41,7 +51,7 @@ public:
 
 	double timer;
 	double fixedTimeSimulated;
-	double countdownToCops;
+	double countdownToDeath;
 	olc::Pixel timerTextColor;
 
 	olc::MiniAudio ma;

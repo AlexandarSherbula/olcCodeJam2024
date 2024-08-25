@@ -463,12 +463,12 @@ void Player::Draw()
 	}
 	else
 	{
+		decal = Assets::get().GetDecal(mAnimationName + std::to_string(mCurrentImage));
+
+		if (mAnimState == AnimationState::JUMP_SHOOT)
+			decal = Assets::get().GetDecal("jump4");
 		if (mAnimState == AnimationState::SHOOT || mAnimState == AnimationState::CROUCH)
 			decal = Assets::get().GetDecal(mAnimationName);
-		else if (mAnimState == AnimationState::JUMP_SHOOT)
-			decal = Assets::get().GetDecal("jump4");
-		else
-			decal = Assets::get().GetDecal(mAnimationName + std::to_string(mCurrentImage));
 	}
 
 	if (tempInvicible)
